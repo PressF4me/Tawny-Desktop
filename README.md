@@ -5,9 +5,9 @@
 > AI-built software for ethical, political, professional or personal reasons,
 > so you should know that before you install, run or contribute.
 
-# 🦉 Tawny for Linux
+# 🦉 Tawny Desktop
 
-Tawny, the private two-way pet monitor, as a Linux desktop app. Point a webcam
+Tawny, the private two-way pet monitor, for Linux and Windows. Point a webcam
 at your pet (**Monitor**) or watch one from your computer (**Viewer**). It uses
 the same web client as the Android app and pairs with it by QR code. No
 account, no sign-up.
@@ -22,10 +22,22 @@ Video and audio go **peer to peer over WebRTC**, encrypted end to end
 
 | Format | Where |
 |---|---|
-| Flatpak | Flathub (`io.github.PressF4me.Tawny`, once published), or the `.flatpak` bundle from [Releases](https://github.com/PressF4me/Tawny-Linux/releases) |
-| AppImage | [Releases](https://github.com/PressF4me/Tawny-Linux/releases): `chmod +x Tawny_*.AppImage` and run it |
+| Flatpak | Flathub (`io.github.PressF4me.Tawny`, once published), or the `.flatpak` bundle from [Releases](https://github.com/PressF4me/Tawny-Desktop/releases) |
+| AppImage | [Releases](https://github.com/PressF4me/Tawny-Desktop/releases): `chmod +x Tawny_*.AppImage` and run it |
+| Windows | [Releases](https://github.com/PressF4me/Tawny-Desktop/releases): `Tawny_*_x64-setup.exe`. It installs for your user only, with no admin prompt |
 
 x86_64 only for now.
+
+**Windows notes**
+
+- The installer isn't code-signed yet, so SmartScreen says "Windows protected
+  your PC". Choose **More info → Run anyway**.
+- If the camera doesn't come on, check **Settings → Privacy & security →
+  Camera → Let desktop apps access your camera**.
+- Chromium's own process sandbox is **off** on Windows. Tauri's CEF runtime
+  can't yet host the broker process the Windows sandbox needs. The page Tawny
+  loads is only ever its own, but the renderer has less isolation than on
+  Linux, where the sandbox is on.
 
 ## How it's built
 
@@ -68,8 +80,8 @@ channels in `localStorage`, which is per origin, port included.
 
 ## Build
 
-Requirements: Rust 1.95+, GTK 4.14+ dev headers, cmake, ninja, patchelf, and
-the Tauri CLI that matches the pinned crates:
+Requirements on Linux: Rust 1.95+, GTK 4.14+ dev headers, cmake, ninja,
+patchelf, and the Tauri CLI that matches the pinned crates:
 
 ```sh
 cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
@@ -80,6 +92,7 @@ cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
 | Run from source | `cd src-tauri && cargo tauri dev` |
 | AppImage | `tools/build-appimage.sh` → `dist/` |
 | Flatpak | `tools/build-flatpak.sh` → installs for your user, bundle in `dist/` |
+| Windows installer | on Windows, with the MSVC build tools, CMake and Ninja: `cd src-tauri; cargo tauri build --bundles nsis` |
 
 The first build downloads the CEF distribution (≈300 MB compressed) into
 `~/.cache/tauri-cef`.
@@ -97,8 +110,9 @@ The first build downloads the CEF distribution (≈300 MB compressed) into
 
 ## Releasing
 
-Push a `v*` tag. `.github/workflows/release.yml` builds the AppImage and the
-Flatpak bundle and attaches both to a GitHub release. Flathub builds from its
+Push a `v*` tag. `.github/workflows/release.yml` builds the AppImage, the
+Flatpak bundle and the Windows installer, and attaches all three to a GitHub
+release. Flathub builds from its
 own `flathub/io.github.PressF4me.Tawny` repo, whose manifest is this one with
 the `dir` source replaced by `type: git` and the tag.
 

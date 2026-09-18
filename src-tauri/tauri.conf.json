@@ -15,22 +15,33 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["appimage"],
+    "targets": [
+      "appimage",
+      "nsis"
+    ],
     "category": "Utility",
     "shortDescription": "A private two-way pet monitor",
     "longDescription": "Turn a webcam into a private pet camera, or watch one. Video and audio go peer to peer over WebRTC, encrypted end to end. No account, no sign-up.",
     "copyright": "Copyright © 2026 PressF4me",
     "license": "MIT",
-    "homepage": "https://github.com/PressF4me/Tawny-Linux",
+    "homepage": "https://github.com/PressF4me/Tawny-Desktop",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
-      "icons/icon.png"
+      "icons/icon.png",
+      "icons/icon.ico"
     ],
     "linux": {
       "appimage": {
         "bundleMediaFramework": false
+      }
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "installerIcon": "icons/icon.ico",
+        "startMenuFolder": "Tawny"
       }
     }
   }
