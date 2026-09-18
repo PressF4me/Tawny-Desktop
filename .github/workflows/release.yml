@@ -50,12 +50,14 @@ jobs:
 
       - name: Tauri CLI
         if: steps.tauri-cli.outputs.cache-hit != 'true'
-        shell: bash
+        # PowerShell, not bash: on Windows, Git Bash puts its coreutils `link`
+        # ahead of MSVC's link.exe and every Rust link fails.
+        shell: pwsh
         run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
 
       - name: Tauri CLI on PATH
-        shell: bash
-        run: echo "$HOME/.tauri-cli/bin" >> "$GITHUB_PATH"
+        shell: pwsh
+        run: Join-Path $HOME .tauri-cli bin | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
 
       - name: Build
         run: tools/build-appimage.sh
@@ -124,12 +126,14 @@ jobs:
 
       - name: Tauri CLI
         if: steps.tauri-cli.outputs.cache-hit != 'true'
-        shell: bash
+        # PowerShell, not bash: on Windows, Git Bash puts its coreutils `link`
+        # ahead of MSVC's link.exe and every Rust link fails.
+        shell: pwsh
         run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
 
       - name: Tauri CLI on PATH
-        shell: bash
-        run: echo "$HOME/.tauri-cli/bin" >> "$GITHUB_PATH"
+        shell: pwsh
+        run: Join-Path $HOME .tauri-cli bin | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
 
       - name: Build
         working-directory: src-tauri
