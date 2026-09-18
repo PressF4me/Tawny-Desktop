@@ -37,10 +37,12 @@ fn main() {
       let origin = format!("http://127.0.0.1:{port}");
       let url: Url = format!("{origin}/").parse()?;
 
+      let (width, height) = window_size(app);
       WebviewWindowBuilder::new(app, "main", WebviewUrl::External(url))
         .title("Tawny")
-        .inner_size(1024., 760.)
+        .inner_size(width, height)
         .min_inner_size(360., 560.)
+        .center()
         .on_permission_request(|_webview, kind| match kind {
           // Nothing but Tawny's page ever loads here (see on_navigation), and
           // being a camera is the whole job.
@@ -68,6 +70,18 @@ fn main() {
     })
     .run(tauri::generate_context!())
     .expect("error while running Tawny");
+}
+
+/// 1024×760, or less where that would not fit: a 1366×768 laptop has about
+/// 720 px of height left after the taskbar, and the window's own title bar
+/// comes out of that too.
+fn window_size(app: &tauri::App) -> (f64, f64) {
+  const WANT: (f64, f64) = (1024., 760.);
+  // Room for the title bar and window borders, which inner_size excludes.
+  const FRAME: f64 = 48.;
+  let Ok(Some(monitor)) = app.primary_monitor() else { return WANT };
+  let area = monitor.work_area().size.to_logical::<f64>(monitor.scale_factor());
+  (WANT.0.min(area.width - FRAME), WANT.1.min(area.height - FRAME))
 }
 
 fn same_origin(url: &Url, origin: &str) -> bool {
