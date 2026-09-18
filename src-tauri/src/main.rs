@@ -17,9 +17,14 @@ use tauri_runtime_cef::{AutoplayPolicy, Cef};
 fn main() {
   env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
+  // Named after the app ID, not "tawny": on Windows %LOCALAPPDATA%\tawny is
+  // the install folder itself (paths ignore case), and the NSIS uninstaller's
+  // "delete app data" removes exactly %LOCALAPPDATA%\<identifier>. Local, not
+  // roaming, data: a Chromium profile does not belong in %APPDATA%.
   // Under Flatpak these resolve inside ~/.var/app/io.github.PressF4me.Tawny.
-  let data = dirs::data_dir().unwrap_or_else(std::env::temp_dir).join("tawny");
-  let cache = dirs::cache_dir().unwrap_or_else(std::env::temp_dir).join("tawny");
+  const ID: &str = "io.github.PressF4me.Tawny";
+  let data = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir).join(ID);
+  let cache = dirs::cache_dir().unwrap_or_else(std::env::temp_dir).join(ID);
 
   let cef = Cef::default()
     // The Chromium profile: localStorage (saved channels, theme, language) and
