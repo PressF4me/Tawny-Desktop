@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Tawny
+GenericName=Pet Monitor
+Comment=A private two-way pet monitor
+Icon=io.github.PressF4me.Tawny
+Exec=tawny
+Terminal=false
+Categories=Utility;
+Keywords=pet;camera;monitor;webcam;baby monitor;
+StartupWMClass=tawny

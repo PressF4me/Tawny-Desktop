@@ -1,0 +1,97 @@
+# Tawny for Linux, as a Flatpak.
+#
+# Local build (from the repo root):
+#   tools/build-flatpak.sh
+#
+# Flathub builds with no network, so everything is a pinned source here: the
+# Rust crates come from cargo-sources.json (regenerate with
+# tools/update-cargo-sources.sh whenever Cargo.lock changes), and CEF is the
+# exact tarball download-cef would otherwise fetch at build time.
+#
+# The copy of this file in the flathub/io.github.PressF4me.Tawny repo swaps the
+# `dir` source below for `type: git` + the release tag.
+
+id: io.github.PressF4me.Tawny
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+command: tawny
+
+finish-args:
+  # The CEF runtime draws through X11 (XWayland on a Wayland session).
+  - --share=ipc
+  - --socket=x11
+  # Camera: Chromium opens /dev/video* directly.
+  - --device=all
+  # Microphone for talk-back, speakers for the stream and the chimes.
+  - --socket=pulseaudio
+  # WebRTC, the rendezvous, and the local signalling server on 127.0.0.1.
+  - --share=network
+
+modules:
+  # Swaps Chromium's sandbox for Flatpak's. Same module the Electron BaseApp
+  # builds; Tawny is not Electron, so it builds it itself.
+  - name: zypak
+    sources:
+      - type: git
+        url: https://github.com/refi64/zypak
+        tag: v2025.09
+        commit: 693a71c5ffa80ec9c9ce2ae03b1ccc493c698e53
+
+  - name: tawny
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/rust-stable/bin
+      env:
+        CARGO_HOME: /run/build/tawny/cargo
+        CARGO_NET_OFFLINE: 'true'
+        # cef-dll-sys builds against this instead of downloading CEF.
+        CEF_PATH: /run/build/tawny/cef-dist
+    build-commands:
+      # Lay CEF out the way download-cef's extract_target_archive() does:
+      # Release/ and Resources/ flattened into one directory, plus the headers
+      # and CMake files the libcef_dll wrapper is built from.
+      - |
+        set -e
+        mkdir -p cef-dist
+        cp -a cef/Release/. cef/Resources/. cef-dist/
+        cp -a cef/CMakeLists.txt cef/cmake cef/include cef/libcef_dll cef-dist/
+        printf '%s' '{"type":"minimal","name":"cef_binary_152.0.6+g708dc14+chromium-152.0.7977.83_linux64_minimal.tar.bz2","sha1":"9711b86c105fb590da576fe5a829802f1a79d520"}' > cef-dist/archive.json
+      # custom-protocol is what the Tauri CLI adds for a production build.
+      - cargo --offline build --release --manifest-path src-tauri/Cargo.toml --features tauri/custom-protocol
+      - install -Dm755 src-tauri/target/release/tawny /app/lib/tawny/tawny
+      # The CEF files the Tauri bundler ships in the AppImage (sharun_cef.rs),
+      # less chrome-sandbox, which zypak stands in for.
+      - |
+        set -e
+        for f in libcef.so icudtl.dat v8_context_snapshot.bin \
+                 chrome_100_percent.pak chrome_200_percent.pak resources.pak \
+                 libEGL.so libGLESv2.so libvk_swiftshader.so vk_swiftshader_icd.json libvulkan.so.1; do
+          install -Dm644 "cef-dist/$f" "/app/lib/tawny/$f"
+        done
+        chmod 755 /app/lib/tawny/*.so /app/lib/tawny/libvulkan.so.1
+        strip /app/lib/tawny/libcef.so
+        install -d /app/lib/tawny/locales
+        install -m644 cef-dist/locales/en-US*.pak /app/lib/tawny/locales/
+      - install -Dm755 packaging/flatpak/tawny.sh /app/bin/tawny
+      - install -Dm644 packaging/flatpak/io.github.PressF4me.Tawny.desktop -t /app/share/applications
+      - install -Dm644 packaging/flatpak/io.github.PressF4me.Tawny.metainfo.xml -t /app/share/metainfo
+      - install -Dm644 src-tauri/icons/icon.svg /app/share/icons/hicolor/scalable/apps/io.github.PressF4me.Tawny.svg
+      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/io.github.PressF4me.Tawny.png
+      - install -Dm644 src-tauri/icons/icon.png /app/share/icons/hicolor/512x512/apps/io.github.PressF4me.Tawny.png
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - src-tauri/target
+          - .flatpak-builder
+          - build-dir
+          - repo
+          - dist
+      - type: archive
+        url: https://cef-builds.spotifycdn.com/cef_binary_152.0.6%2Bg708dc14%2Bchromium-152.0.7977.83_linux64_minimal.tar.bz2
+        sha256: daf8c2b6e63787d6a91d666205a8a4521419937eabaf47723738c86aea7135bd
+        dest: cef
+      - cargo-sources.json

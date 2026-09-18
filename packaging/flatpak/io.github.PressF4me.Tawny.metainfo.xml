@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.PressF4me.Tawny</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Tawny</name>
+  <summary>A private two-way pet monitor</summary>
+
+  <developer id="io.github.pressf4me">
+    <name>PressF4me</name>
+  </developer>
+
+  <description>
+    <p>
+      Point a webcam at your pet and watch from your phone, or watch a pet
+      camera from your computer. Tawny streams video and audio, lets you talk
+      back, and rings a chime to get your pet's attention.
+    </p>
+    <p>
+      Video and audio go peer to peer over WebRTC, encrypted end to end. There
+      is no account and no sign-up: pairing is a photo of a QR code. Tawny is
+      free, with no ads, no paywall and nothing locked.
+    </p>
+    <p>
+      Tawny is built with AI: most of its code and documentation was written
+      with Claude, an AI model made by Anthropic, under the maintainer's
+      direction.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.github.PressF4me.Tawny.desktop</launchable>
+
+  <url type="homepage">https://github.com/PressF4me/Tawny-Linux</url>
+  <url type="bugtracker">https://github.com/PressF4me/Tawny-Linux/issues</url>
+  <url type="vcs-browser">https://github.com/PressF4me/Tawny-Linux</url>
+  <url type="donation">https://ko-fi.com/A6N425ZWFE</url>
+
+  <!-- Flathub reviewers want screenshots of the Linux app in use: add the
+       Monitor and Viewer screens here before submitting. -->
+  <screenshots>
+    <screenshot type="default">
+      <caption>Welcome screen</caption>
+      <image>https://raw.githubusercontent.com/PressF4me/Tawny-Linux/main/docs/media/screenshot-01.png</image>
+    </screenshot>
+  </screenshots>
+
+  <content_rating type="oars-1.1">
+    <!-- Live audio/video with a paired device the user chose. -->
+    <content_attribute id="social-audio">intense</content_attribute>
+  </content_rating>
+
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+
+  <releases>
+    <release version="0.1.0" date="2026-09-18">
+      <description>
+        <p>First Linux build.</p>
+      </description>
+    </release>
+  </releases>
+</component>

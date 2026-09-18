@@ -1,0 +1,87 @@
+# Build the AppImage and the Flatpak bundle on every push, and attach both to
+# a GitHub release when a v* tag is pushed. Flathub itself builds from the
+# flathub/io.github.PressF4me.Tawny repo, not from here.
+
+name: release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  appimage:
+    # GTK 4.14 is the oldest the pinned gtk4-rs features accept; 24.04 has it.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libgtk-4-dev libxkbcommon-dev cmake ninja-build file patchelf
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: CEF cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/tauri-cef
+          key: cef-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Tauri CLI
+        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
+
+      - name: Build
+        run: tools/build-appimage.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: appimage
+          path: dist/*.AppImage
+
+  flatpak:
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
+        with:
+          manifest-path: packaging/flatpak/io.github.PressF4me.Tawny.yml
+          bundle: Tawny-x86_64.flatpak
+          cache-key: flatpak-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [appimage, flatpak]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+
+      - name: Name the Flatpak bundle after the tag
+        run: mv out/Tawny-x86_64.flatpak "out/Tawny-${GITHUB_REF_NAME#v}-x86_64.flatpak"
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            out/*.AppImage
+            out/*.flatpak
+          generate_release_notes: true

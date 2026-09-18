@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Tawny",
+  "mainBinaryName": "tawny",
+  "version": "0.1.0",
+  "identifier": "io.github.PressF4me.Tawny",
+  "build": {
+    "frontendDist": "../web"
+  },
+  "app": {
+    "windows": [],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["appimage"],
+    "category": "Utility",
+    "shortDescription": "A private two-way pet monitor",
+    "longDescription": "Turn a webcam into a private pet camera, or watch one. Video and audio go peer to peer over WebRTC, encrypted end to end. No account, no sign-up.",
+    "copyright": "Copyright © 2026 PressF4me",
+    "license": "MIT",
+    "homepage": "https://github.com/PressF4me/Tawny-Linux",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png"
+    ],
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    }
+  }
+}

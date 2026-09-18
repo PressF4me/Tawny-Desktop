@@ -1,0 +1,42 @@
+[package]
+name = "tawny"
+version = "0.1.0"
+description = "Tawny — a private two-way pet monitor"
+authors = ["PressF4me"]
+license = "MIT"
+repository = "https://github.com/PressF4me/Tawny-Linux"
+edition = "2024"
+rust-version = "1.95"
+publish = false
+
+[build-dependencies]
+# alpha.1 did not republish tauri-build; alpha.0 is its match.
+tauri-build = { version = "=3.0.0-alpha.0", features = [] }
+
+[dependencies]
+# Tauri 3 is the first release line with the Chromium Embedded Framework runtime.
+# Pinned exactly: it is an alpha, the CLI must match it, and the Flathub build
+# vendors whatever Cargo.lock names.
+tauri = { version = "=3.0.0-alpha.1", features = [] }
+# Depending on this crate is what selects CEF: tauri-build and the CLI detect it
+# from the manifest and ship the CEF distribution with the bundle. WebKitGTK is
+# not an option for Tawny — its WebRTC is off or incomplete on most distros.
+tauri-runtime-cef = "=3.0.0-alpha.1"
+
+axum = { version = "0.8", default-features = false, features = ["http1", "tokio", "ws", "query"] }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "sync", "time", "macros"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+hex = "0.4"
+rand = "0.9"
+dirs = "6"
+open = "5"
+log = "0.4"
+env_logger = { version = "0.11", default-features = false, features = ["auto-color"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
