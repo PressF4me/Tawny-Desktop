@@ -39,8 +39,23 @@ jobs:
           path: ~/.cache/tauri-cef
           key: cef-${{ hashFiles('src-tauri/Cargo.lock') }}
 
+      # Compiling the CLI takes ~10 minutes; keep it outside ~/.cargo so
+      # rust-cache's cleanup leaves it alone.
+      - name: Tauri CLI cache
+        id: tauri-cli
+        uses: actions/cache@v4
+        with:
+          path: ~/.tauri-cli
+          key: tauri-cli-3.0.0-alpha.1-${{ runner.os }}
+
       - name: Tauri CLI
-        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
+        if: steps.tauri-cli.outputs.cache-hit != 'true'
+        shell: bash
+        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
+
+      - name: Tauri CLI on PATH
+        shell: bash
+        run: echo "$HOME/.tauri-cli/bin" >> "$GITHUB_PATH"
 
       - name: Build
         run: tools/build-appimage.sh
@@ -54,8 +69,20 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
-      options: --privileged
+      # The runner's preinstalled SDKs are mounted in only so the first step
+      # can delete them: a CEF build needs more disk than the runner has free.
+      options: >-
+        --privileged
+        -v /usr/share/dotnet:/hostfree/dotnet
+        -v /usr/local/lib/android:/hostfree/android
+        -v /opt/hostedtoolcache:/hostfree/toolcache
+        -v /usr/local/.ghcup:/hostfree/ghcup
     steps:
+      - name: Free runner disk
+        run: |
+          rm -rf /hostfree/*/* || true
+          df -h /
+
       - uses: actions/checkout@v4
 
       - uses: flathub-infra/flatpak-github-actions/flatpak-builder@master
@@ -86,8 +113,23 @@ jobs:
           path: ~/AppData/Local/tauri-cef
           key: cef-windows-${{ hashFiles('src-tauri/Cargo.lock') }}
 
+      # Compiling the CLI takes ~10 minutes; keep it outside ~/.cargo so
+      # rust-cache's cleanup leaves it alone.
+      - name: Tauri CLI cache
+        id: tauri-cli
+        uses: actions/cache@v4
+        with:
+          path: ~/.tauri-cli
+          key: tauri-cli-3.0.0-alpha.1-${{ runner.os }}
+
       - name: Tauri CLI
-        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
+        if: steps.tauri-cli.outputs.cache-hit != 'true'
+        shell: bash
+        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
+
+      - name: Tauri CLI on PATH
+        shell: bash
+        run: echo "$HOME/.tauri-cli/bin" >> "$GITHUB_PATH"
 
       - name: Build
         working-directory: src-tauri
