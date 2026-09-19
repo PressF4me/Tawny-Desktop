@@ -15,7 +15,7 @@ account, no sign-up.
 Video and audio go **peer to peer over WebRTC**, encrypted end to end
 (DTLS-SRTP).
 
-- **Android app:** [Tawny-Pet-Monitor-APK](https://github.com/PressF4me/Tawny-Pet-Monitor-APK)
+- **Android app:** [Tawny-APK](https://github.com/PressF4me/Tawny-APK)
 - **Self-hosting:** [Tawny Docker](https://github.com/PressF4me/Tawny-Docker)
 
 ## Install
