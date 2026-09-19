@@ -60,6 +60,11 @@
   </supports>
 
   <releases>
+    <release version="0.1.1" date="2026-09-18">
+      <description>
+        <p>Opens on the app's cat, Tawny the owlet and dog. A Viewer whose clock is off no longer calls a fresh pairing code expired.</p>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-09-18">
       <description>
         <p>First Linux build.</p>
