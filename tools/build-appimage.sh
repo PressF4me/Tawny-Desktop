@@ -25,6 +25,11 @@ command -v jq >/dev/null || { echo "jq is needed (pacman -S jq / apt install jq)
 # (nss_util.cc FATAL, NSSUTIL_3.10x not found). See
 # ~/send to cachy/Tawny-AppImage-NSS-fix-PR.md for the full writeup.
 #
+# Also missing for the same reason: libnssckbi.so, NSS's dlopen()ed built-in
+# root-CA-certs module. Without it, "After loading Root Certs, loaded==false"
+# gets logged on hosts that don't happen to have it either (non-fatal, but
+# means cert-dependent features have no bundled trust store to fall back on).
+#
 # Fix: find the dlopen-only modules on the build host and hand them to
 # quick-sharun explicitly via tauri's `bundle.linux.appimage.files` (any
 # target under /usr/lib is added to quick-sharun's explicit deploy list, per
@@ -38,7 +43,7 @@ done
 
 nss_extra_config=""
 nss_config_entries=()
-for lib in libsoftokn3.so libfreebl3.so libfreeblpriv3.so; do
+for lib in libsoftokn3.so libfreebl3.so libfreeblpriv3.so libnssckbi.so; do
   path="$(find "${nss_search_dirs[@]}" -maxdepth 2 -name "$lib" 2>/dev/null | head -1)"
   if [ -n "$path" ]; then
     nss_config_entries+=("--arg" "/usr/lib/$lib" "$path")
