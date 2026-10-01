@@ -28,6 +28,19 @@ Video and audio go **peer to peer over WebRTC**, encrypted end to end
 
 x86_64 only for now.
 
+**AppImage notes**
+
+- **Ubuntu 23.10 and later** block the user namespaces Chromium's sandbox
+  needs. On first run the AppImage offers to add an AppArmor exception for
+  itself, which asks for your password. Say yes; it's the same profile
+  Chrome and other Chromium-based apps install. The exception is tied to the
+  file's path, so it asks again after you move or rename the AppImage.
+- If the system has no FUSE, the AppImage unpacks itself to a temporary
+  folder on each launch instead. It still runs, but starts more slowly.
+  `sudo apt install fuse3` (or your distro's equivalent) avoids that.
+- 0.1.2 and earlier crash on startup on hosts with a newer NSS than the
+  build machine (`nss_util.cc` FATAL in the terminal). Fixed in 0.1.3.
+
 **Windows notes**
 
 - The installer isn't code-signed yet, so SmartScreen says "Windows protected
