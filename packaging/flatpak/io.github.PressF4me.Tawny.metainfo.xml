@@ -60,6 +60,11 @@
   </supports>
 
   <releases>
+    <release version="0.1.3" date="2026-10-01">
+      <description>
+        <p>The AppImage starts on systems with a newer NSS than the build machine, instead of crashing at launch, and secure connections work there too. A Monitor using a plain ws:// server can now reach it.</p>
+      </description>
+    </release>
     <release version="0.1.2" date="2026-09-18">
       <description>
         <p>The Monitor shows the safety code for every new phone, not only the first. Pairing with a code-only link at a server that needs a ticket says so, instead of calling the code expired. The safety-code screen is readable in light mode.</p>
