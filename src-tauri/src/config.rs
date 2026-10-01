@@ -60,8 +60,11 @@ impl Config {
     let mut out = vec!["'self'".to_string()];
     let rv = bare_host(&self.rendezvous);
     if host_ok(rv) {
-      out.push(format!("wss://{rv}"));
-      out.push(format!("https://{rv}"));
+      // A plain ws:// rendezvous (a LAN or test server) is dialled as ws:// and
+      // http://; a wss:// one would never match those, and the reverse.
+      let (ws, http) = if self.rendezvous.starts_with("ws://") { ("ws", "http") } else { ("wss", "https") };
+      out.push(format!("{ws}://{rv}"));
+      out.push(format!("{http}://{rv}"));
     }
     // Belt and braces only — Chromium does not gate ICE servers on connect-src.
     for u in &self.stun {
@@ -72,7 +75,8 @@ impl Config {
         out.push(format!("turns://{h}"));
       }
     }
-    out.dedup();
+    let mut seen = std::collections::HashSet::new();
+    out.retain(|s| seen.insert(s.clone()));
     out.join(" ")
   }
 
@@ -142,5 +146,21 @@ mod tests {
     let s = c.connect_src();
     assert!(s.starts_with("'self' wss://rv.example.dev https://rv.example.dev"));
     assert!(s.contains("stun://s.example:3478"));
+  }
+
+  #[test]
+  fn connect_src_plain_ws_rendezvous() {
+    let c = Config { rendezvous: "ws://192.168.1.5:8080".into(), stun: vec![], turn_mode: "auto".into() };
+    assert_eq!(c.connect_src(), "'self' ws://192.168.1.5:8080 http://192.168.1.5:8080");
+  }
+
+  #[test]
+  fn connect_src_no_repeats() {
+    let c = Config {
+      rendezvous: String::new(),
+      stun: vec!["stun:a.example:3478".into(), "stun:b.example:3478".into(), "stun:a.example:3478".into()],
+      turn_mode: "auto".into(),
+    };
+    assert_eq!(c.connect_src().matches("stun://a.example:3478").count(), 1);
   }
 }

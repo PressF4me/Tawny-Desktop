@@ -1,4 +1,4 @@
-//! Tawny for Linux: the Tawny web client in a Chromium (CEF) window, served by
+//! Tawny for Linux and Windows: the Tawny web client in a Chromium (CEF) window, served by
 //! a small Rust server on loopback. See README.md for the shape of it.
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]

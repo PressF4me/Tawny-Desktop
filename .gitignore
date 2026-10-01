@@ -7,3 +7,6 @@ dist/
 build-dir/
 repo/
 .flatpak-builder/
+
+# AppImage bundler scratch (quick-sharun)
+AppDir/
