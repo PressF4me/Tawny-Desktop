@@ -16,6 +16,11 @@ use serde_json::json;
 const DEFAULT_RENDEZVOUS: &str = "wss://tawny-rendezvous.tawny1.workers.dev";
 const DEFAULT_STUN: &str = "stun:stun.cloudflare.com:3478,stun:stun.l.google.com:19302";
 
+/// The update board's text for this release: `{ version, notes[], changelog }`.
+/// Only sent when its `version` is this build's, so a version bump that forgot
+/// to rewrite it shows no board rather than last release's notes.
+const WHATSNEW: &str = include_str!("../whatsnew.json");
+
 pub struct Config {
   pub rendezvous: String,
   pub stun: Vec<String>,
@@ -47,6 +52,7 @@ impl Config {
       "rendezvous": self.rendezvous,
       "turnMode": self.turn_mode,
       "authRequired": false,
+      "release": release(WHATSNEW, env!("CARGO_PKG_VERSION")),
     })
     .to_string()
   }
@@ -123,8 +129,24 @@ fn host_ok(h: &str) -> bool {
     && port.is_none_or(|p| (1..=5).contains(&p.len()) && p.chars().all(|c| c.is_ascii_digit()))
 }
 
+/// `whatsnew.json`, when it describes `version`; otherwise null (no board).
+fn release(whatsnew: &str, version: &str) -> serde_json::Value {
+  match serde_json::from_str::<serde_json::Value>(whatsnew) {
+    Ok(v) if v["version"] == version => v,
+    _ => serde_json::Value::Null,
+  }
+}
+
 #[cfg(test)]
 mod tests {
+  #[test]
+  fn release_only_for_its_own_version() {
+    let w = r#"{"version":"1.2.3","notes":["a"],"changelog":"https://x"}"#;
+    assert_eq!(release(w, "1.2.3")["notes"][0], "a");
+    assert!(release(w, "1.2.4").is_null());
+    assert!(release("not json", "1.2.3").is_null());
+  }
+
   use super::*;
 
   #[test]
