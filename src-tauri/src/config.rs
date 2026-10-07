@@ -21,6 +21,14 @@ const DEFAULT_STUN: &str = "stun:stun.cloudflare.com:3478,stun:stun.l.google.com
 /// to rewrite it shows no board rather than last release's notes.
 const WHATSNEW: &str = include_str!("../whatsnew.json");
 
+/// Whether a Chromium profile from an earlier run was already on disk at
+/// startup. Set once from main(); see [`release`].
+static RAN_BEFORE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+pub fn set_ran_before(v: bool) {
+  RAN_BEFORE.store(v, std::sync::atomic::Ordering::Relaxed);
+}
+
 pub struct Config {
   pub rendezvous: String,
   pub stun: Vec<String>,
@@ -52,7 +60,7 @@ impl Config {
       "rendezvous": self.rendezvous,
       "turnMode": self.turn_mode,
       "authRequired": false,
-      "release": release(WHATSNEW, env!("CARGO_PKG_VERSION")),
+      "release": release(WHATSNEW, env!("CARGO_PKG_VERSION"), RAN_BEFORE.load(std::sync::atomic::Ordering::Relaxed)),
     })
     .to_string()
   }
@@ -130,9 +138,14 @@ fn host_ok(h: &str) -> bool {
 }
 
 /// `whatsnew.json`, when it describes `version`; otherwise null (no board).
-fn release(whatsnew: &str, version: &str) -> serde_json::Value {
+/// `upgraded` tells the page this is not a first install even when nothing
+/// was ever set up, so the board still shows on the welcome screen.
+fn release(whatsnew: &str, version: &str, upgraded: bool) -> serde_json::Value {
   match serde_json::from_str::<serde_json::Value>(whatsnew) {
-    Ok(v) if v["version"] == version => v,
+    Ok(mut v) if v["version"] == version => {
+      v["upgraded"] = upgraded.into();
+      v
+    }
     _ => serde_json::Value::Null,
   }
 }
@@ -142,9 +155,10 @@ mod tests {
   #[test]
   fn release_only_for_its_own_version() {
     let w = r#"{"version":"1.2.3","notes":["a"],"changelog":"https://x"}"#;
-    assert_eq!(release(w, "1.2.3")["notes"][0], "a");
-    assert!(release(w, "1.2.4").is_null());
-    assert!(release("not json", "1.2.3").is_null());
+    assert_eq!(release(w, "1.2.3", false)["notes"][0], "a");
+    assert_eq!(release(w, "1.2.3", true)["upgraded"], true);
+    assert!(release(w, "1.2.4", true).is_null());
+    assert!(release("not json", "1.2.3", true).is_null());
   }
 
   use super::*;

@@ -1,8 +1,7 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "notes": [
-    "After an update, Tawny now shows what changed",
-    "Each update links to its full changelog"
+    "This board now shows after every update, even if Tawny was never set up"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }

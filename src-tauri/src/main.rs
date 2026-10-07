@@ -25,6 +25,10 @@ fn main() {
   const ID: &str = "io.github.PressF4me.Tawny";
   let data = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir).join(ID);
   let cache = dirs::cache_dir().unwrap_or_else(std::env::temp_dir).join(ID);
+  // Checked before CEF creates it: a profile left by an earlier run means
+  // this launch is an update (or a reopen), never a first install, even if
+  // nothing was ever set up. The update board needs to know which.
+  config::set_ran_before(data.join("profile").exists());
 
   let cef = Cef::default()
     // The Chromium profile: localStorage (saved channels, theme, language) and
