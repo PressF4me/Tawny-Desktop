@@ -1,6 +1,6 @@
 [package]
 name = "tawny"
-version = "0.1.5"
+version = "0.1.6"
 description = "Tawny — a private two-way pet monitor"
 authors = ["PressF4me"]
 license = "MIT"

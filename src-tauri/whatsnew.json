@@ -1,7 +1,7 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.6",
   "notes": [
-    "This board now shows after every update, even if Tawny was never set up"
+    "Same web client as Tawny for Android 1.0.2, with its fix for older web engines (nothing changes here)"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }
