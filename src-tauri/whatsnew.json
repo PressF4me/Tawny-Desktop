@@ -1,8 +1,7 @@
 {
-  "version": "0.1.7",
+  "version": "0.1.8",
   "notes": [
-    "Who's here: give yourself a name, then tap the viewer count to see everyone watching the same camera",
-    "This computer shows up as a Linux PC or Windows PC in that list, not as a phone"
+    "A camera with no name shows in your own language (\"tu mascota\" in Spanish), whatever language its Monitor uses"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }
