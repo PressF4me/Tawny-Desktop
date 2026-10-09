@@ -1,7 +1,8 @@
 {
-  "version": "0.1.8",
+  "version": "0.1.9",
   "notes": [
-    "A camera with no name shows in your own language (\"tu mascota\" in Spanish), whatever language its Monitor uses"
+    "When the Monitor has Announce viewers on, you hear the same sound it plays whenever someone new starts watching",
+    "The first-call tour shows where to tap to see who's here"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }
