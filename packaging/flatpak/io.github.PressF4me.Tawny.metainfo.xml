@@ -60,6 +60,11 @@
   </supports>
 
   <releases>
+    <release version="0.1.7" date="2026-10-09">
+      <description>
+        <p>Who's here: give yourself a name, then tap the viewer count to see everyone watching the same camera. This computer is listed as a Linux PC rather than a phone.</p>
+      </description>
+    </release>
     <release version="0.1.6" date="2026-10-07">
       <description>
         <p>The web client shared with the Android app no longer relies on a browser call that older web engines lack. Nothing changes in how Tawny Desktop behaves.</p>

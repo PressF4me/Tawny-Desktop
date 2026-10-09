@@ -1,7 +1,8 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "notes": [
-    "Same web client as Tawny for Android 1.0.2, with its fix for older web engines (nothing changes here)"
+    "Who's here: give yourself a name, then tap the viewer count to see everyone watching the same camera",
+    "This computer shows up as a Linux PC or Windows PC in that list, not as a phone"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }
