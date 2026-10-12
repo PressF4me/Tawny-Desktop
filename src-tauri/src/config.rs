@@ -15,6 +15,12 @@ use serde_json::json;
 
 const DEFAULT_RENDEZVOUS: &str = "wss://tawny-rendezvous.tawny1.workers.dev";
 const DEFAULT_STUN: &str = "stun:stun.cloudflare.com:3478,stun:stun.l.google.com:19302";
+/// Hosts "Tip in Bitcoin" talks to: the Lightning Address's LNURL service, the
+/// BTC price for showing dollar amounts, and the relays the zap receipt goes to.
+const TIP_CONNECT_SRC: [&str; 6] = [
+  "https://strike.me", "https://api.coinbase.com",
+  "wss://relay.damus.io", "wss://nos.lol", "wss://relay.primal.net", "wss://relay.snort.social",
+];
 
 /// The update board's text for this release: `{ version, notes[], changelog }`.
 /// Only sent when its `version` is this build's, so a version bump that forgot
@@ -65,7 +71,8 @@ impl Config {
     .to_string()
   }
 
-  /// `connect-src`: this origin, plus the one rendezvous the page dials.
+  /// `connect-src`: this origin, plus the one rendezvous the page dials, plus
+  /// the tip sources ([TIP_CONNECT_SRC]).
   ///
   /// Same reasoning as `CONNECT_SRC` in Tawny Docker's server.js: the directive
   /// exists so a script that got into the page cannot post the channel key to an
@@ -89,6 +96,10 @@ impl Config {
         out.push(format!("turns://{h}"));
       }
     }
+    // "Tip in Bitcoin" (web/tip.js): the tip service, the dollar price, and the
+    // Nostr relays its paid receipt is published to. Named one by one; the
+    // same list as Tawny Docker's server.js and the Android LocalWeb.kt.
+    out.extend(TIP_CONNECT_SRC.iter().map(|s| s.to_string()));
     let mut seen = std::collections::HashSet::new();
     out.retain(|s| seen.insert(s.clone()));
     out.join(" ")
@@ -187,7 +198,7 @@ mod tests {
   #[test]
   fn connect_src_plain_ws_rendezvous() {
     let c = Config { rendezvous: "ws://192.168.1.5:8080".into(), stun: vec![], turn_mode: "auto".into() };
-    assert_eq!(c.connect_src(), "'self' ws://192.168.1.5:8080 http://192.168.1.5:8080");
+    assert_eq!(c.connect_src(), format!("'self' ws://192.168.1.5:8080 http://192.168.1.5:8080 {}", TIP_CONNECT_SRC.join(" ")));
   }
 
   #[test]
