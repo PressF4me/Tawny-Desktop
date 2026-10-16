@@ -194,6 +194,12 @@ body {
 
 button { font: inherit; color: inherit; cursor: pointer; }
 
+/* Read by screen readers, not drawn: the #announcer live region. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
 :focus-visible {
   outline: 2px solid var(--berry);
   outline-offset: 2px;
@@ -1399,6 +1405,9 @@ body.dimmed #theme-toggle { display: none; }
 
 .dim-label {
   margin: 0;
+  padding: 8px 12px;
+  background: none;
+  border: 0;
   color: #7d6f5e;    /* warm, and still nearly nothing on a black screen */
   font-size: 10.5px;
   letter-spacing: .22em;
@@ -1500,6 +1509,8 @@ body.dimmed #theme-toggle { display: none; }
 .wide.primary { background: var(--berry); color: var(--on-accent); border-color: var(--berry); }
 .wide.primary:hover { filter: brightness(1.06); color: var(--on-accent); }
 .wide.ghost { background: none; font-weight: 500; }
+.wide.primary.danger { background: var(--live-ink); border-color: var(--live-ink); }
+.wide.primary.danger:hover { color: var(--on-accent); }
 
 .warn {
   margin: 0;
@@ -2062,6 +2073,9 @@ body.dimmed #theme-toggle { display: none; }
 }
 
 .sheet-actions { display: flex; gap: 9px; margin-top: 2px; }
+/* The card takes focus when a sheet opens so a screen reader starts at its
+   title; it is not a control, so it draws no ring. */
+.sheet-card:focus { outline: none; }
 .sheet-actions .wide { flex: 1; }
 
 /* On a tablet or a desktop window a bottom sheet reads as a stranded strip,
@@ -2527,8 +2541,8 @@ body:has(#live:not([hidden])) #theme-toggle {
 #who, #myname { z-index: 55; }
 /* The one thing in the rail that takes a touch (the rail itself passes them
    through to the video). A little extra hit area round a small chip. */
-#peercount[role="button"] { pointer-events: auto; cursor: pointer; position: relative; }
-#peercount[role="button"]::after { content: ""; position: absolute; inset: -9px -5px; }
+#peercount { pointer-events: auto; cursor: pointer; position: relative; font: inherit; margin: 0; }
+#peercount::after { content: ""; position: absolute; inset: -9px -5px; }
 
 .who-list {
   list-style: none;

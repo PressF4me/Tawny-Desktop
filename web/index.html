@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-i18n-doc-title="w_doc_title">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,20 +33,20 @@
 
   <header class="brand">
     <div>
-      <h1>Tawny</h1>
-      <p class="sub">Pet Monitor</p>
+      <h1 translate="no">Tawny</h1>
+      <p class="sub" data-i18n="w_pet_monitor">Pet Monitor</p>
     </div>
   </header>
 
-  <p class="welcome-lede">Keep an eye on your pet from anywhere in the house.
+  <p class="welcome-lede" data-i18n="w_welcome_lede">Keep an eye on your pet from anywhere in the house.
     Two phones on your Wi-Fi — no accounts, nothing to set up.</p>
    </div>
   </div>
 
   <div class="screen-foot">
     <div class="wrap">
-      <button id="welcome-go" class="wide primary" type="button">Get started</button>
-      <button id="welcome-skip" class="linkbtn" type="button">I've set this up before</button>
+      <button id="welcome-go" class="wide primary" type="button" data-i18n="w_welcome_go">Get started</button>
+      <button id="welcome-skip" class="linkbtn" type="button" data-i18n="w_welcome_skip">I’ve set this up before</button>
     </div>
   </div>
 </main>
@@ -54,12 +54,12 @@
 <!-- ======================= SETUP · ROLE ======================== -->
 <main id="setup-role" class="screen app" tabindex="-1" hidden>
   <header class="appbar">
-    <button id="setup-back" class="appbar-back" type="button" aria-label="Back">
+    <button id="setup-back" class="appbar-back" type="button" aria-label="Back" data-i18n-aria="w_back">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4.5 7.8 12 15 19.5"/></svg>
     </button>
     <div class="appbar-titles">
-      <h1>This device</h1>
-      <p class="appbar-sub">Which job is it doing?</p>
+      <h1 data-i18n="w_setup_title">This device</h1>
+      <p class="appbar-sub" data-i18n="w_setup_sub">Which job is it doing?</p>
     </div>
     <span class="appbar-slot"></span>
   </header>
@@ -84,9 +84,9 @@
             <circle cx="37" cy="19.5" r="1.8" fill="var(--panel)"/>
           </svg>
         </span>
-        <span class="role-tag">The Monitor</span>
-        <strong>Stays with your pet</strong>
-        <em>Plug it in and point the camera. It sends video and sound, answers on
+        <span class="role-tag" data-i18n="w_role_monitor">The Monitor</span>
+        <strong data-i18n="w_setup_monitor_line">Stays with your pet</strong>
+        <em data-i18n="w_setup_monitor_blurb">Plug it in and point the camera. It sends video and sound, answers on
           its own, and shows a code for the Viewer to scan.</em>
         <span class="role-go" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg>
@@ -109,9 +109,9 @@
             <circle cx="24" cy="6.6" r="1" fill="var(--panel)"/>
           </svg>
         </span>
-        <span class="role-tag">The Viewer</span>
-        <strong>Comes with you</strong>
-        <em>See what the Monitor sees, listen in, hold to talk back, ring a chime,
+        <span class="role-tag" data-i18n="w_role_viewer">The Viewer</span>
+        <strong data-i18n="w_setup_viewer_line">Comes with you</strong>
+        <em data-i18n="w_setup_viewer_blurb">See what the Monitor sees, listen in, hold to talk back, ring a chime,
           or save a snapshot.</em>
         <span class="role-go" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg>
@@ -127,12 +127,12 @@
 <!-- ==================== SETUP · WATCHER QR ==================== -->
 <main id="watch-pair" class="screen app" tabindex="-1" hidden>
   <header class="appbar">
-    <button id="wp-back" class="appbar-back" type="button" aria-label="Back">
+    <button id="wp-back" class="appbar-back" type="button" aria-label="Back" data-i18n-aria="w_back">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4.5 7.8 12 15 19.5"/></svg>
     </button>
     <div class="appbar-titles">
-      <h1>The Monitor</h1>
-      <p class="appbar-sub">Show this to the Viewer</p>
+      <h1 data-i18n="w_role_monitor">The Monitor</h1>
+      <p class="appbar-sub" data-i18n="w_wp_sub">Show this to the Viewer</p>
     </div>
     <span class="appbar-slot"></span>
   </header>
@@ -143,38 +143,38 @@
 
     <p id="wp-warn" class="warn" hidden></p>
 
-    <p class="hint">On the other phone, open Tawny, choose <b>The Viewer</b>,
+    <p class="hint" data-i18n-rich="w_wp_hint">On the other phone, open Tawny, choose <b>The Viewer</b>,
       and point its camera at this code.</p>
 
     <div class="wp-share">
-      <p class="wp-share-label">Can't scan? Send this link instead</p>
+      <p class="wp-share-label" data-i18n="w_wp_share">Can’t scan? Send this link instead</p>
       <code id="wp-url" class="pair-url"></code>
-      <button id="wp-copy" class="wide ghost" type="button">Copy pairing link</button>
+      <button id="wp-copy" class="wide ghost" type="button" data-i18n="w_wp_copy">Copy pairing link</button>
 
       <details id="wp-relay" class="relay-hint" hidden>
-        <summary>Pairing with the Tawny app?</summary>
+        <summary data-i18n="w_relay_summary">Pairing with the Tawny app?</summary>
         <div class="relay-hint-body">
-          <p>The app can't open a web link. On that phone, open Tawny, press and
+          <p data-i18n-rich="w_relay_body">The app can’t open a web link. On that phone, open Tawny, press and
             hold the version number at the bottom of the first screen, then choose
             <b>Servers</b> and paste this into <b>Rendezvous</b>.</p>
           <code id="wp-relay-addr" class="pair-url"></code>
-          <button id="wp-relay-copy" class="wide ghost" type="button">Copy server address</button>
-          <p class="fine">Both devices have to use the same server to find each other.</p>
+          <button id="wp-relay-copy" class="wide ghost" type="button" data-i18n="w_relay_copy">Copy server address</button>
+          <p class="fine" data-i18n="w_relay_fine">Both devices have to use the same server to find each other.</p>
         </div>
       </details>
     </div>
 
     <div class="wp-wait">
       <span class="spinner" aria-hidden="true"><i></i><i></i><i></i></span>
-      <span id="wp-status">Waiting for the Viewer</span>
+      <span id="wp-status" data-i18n="w_wp_waiting">Waiting for the Viewer</span>
     </div>
    </div>
   </div>
 
   <div class="screen-foot">
     <div class="wrap">
-      <button id="wp-start" class="wide primary" type="button">Start watching now</button>
-      <button id="wp-later" class="linkbtn" type="button">Set up later</button>
+      <button id="wp-start" class="wide primary" type="button" data-i18n="w_wp_start">Start watching now</button>
+      <button id="wp-later" class="linkbtn" type="button" data-i18n="w_wp_later">Set up later</button>
     </div>
   </div>
 </main>
@@ -184,11 +184,11 @@
   <header class="appbar">
     <img class="appbar-mark" src="icon.svg" alt="" width="30" height="30">
     <div class="appbar-titles">
-      <h1 class="wordmark">Tawny</h1>
-      <p class="appbar-sub">Pet Monitor</p>
+      <h1 class="wordmark" translate="no">Tawny</h1>
+      <p class="appbar-sub" data-i18n="w_pet_monitor">Pet Monitor</p>
     </div>
     <button id="ch-add" class="appbar-action" type="button" aria-label="New channel"
-            title="New channel">
+            title="New channel" data-i18n-aria="w_ch_new" data-i18n-title="w_ch_new">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13"/></svg>
     </button>
   </header>
@@ -197,7 +197,7 @@
    <div class="wrap">
     <section class="block">
       <div class="block-head">
-        <h2>Channels</h2>
+        <h2 data-i18n="w_ch_title">Channels</h2>
       </div>
 
       <ul id="ch-list" class="ch-list"></ul>
@@ -219,29 +219,29 @@
             <text x="126" y="20" class="z3">z</text>
           </g>
         </svg>
-        <p>Nothing paired yet</p>
-        <span>Set up the phone that stays with your pet as The Monitor, then scan
+        <p data-i18n="w_ch_empty_title">Nothing paired yet</p>
+        <span data-i18n="w_ch_empty_body">Set up the phone that stays with your pet as The Monitor, then scan
           its pairing code on this one.</span>
-        <button id="ch-empty-go" class="wide primary" type="button">Set this up</button>
+        <button id="ch-empty-go" class="wide primary" type="button" data-i18n="w_ch_empty_go">Set this up</button>
       </div>
     </section>
 
     <section class="block">
-      <div class="block-head"><h2>Join a Monitor</h2></div>
-      <p class="hint">Point your phone's camera at the pairing code shown by The
+      <div class="block-head"><h2 data-i18n="w_ch_join_title">Join a Monitor</h2></div>
+      <p class="hint" data-i18n="w_ch_join_hint">Point your phone’s camera at the pairing code shown by The
         Monitor. It opens this page already set up.</p>
-      <button id="ch-scan" class="wide" type="button" hidden>Scan pairing code</button>
+      <button id="ch-scan" class="wide" type="button" hidden data-i18n="w_scan_code">Scan pairing code</button>
     </section>
 
     <p id="ch-note" class="note" hidden></p>
 
     <footer class="fine">
-    Video and audio travel straight between your devices. The server only
+    <span data-i18n="w_foot_private">Video and audio travel straight between your devices. The server only
     introduces the two phones to each other, and never gets the key that
-    unlocks the picture.
+    unlocks the picture.</span>
     <br>
-    Tawny is free and unlocks nothing for money — chipping in only helps pay the
-    running costs.
+    <span data-i18n="w_foot_free">Tawny is free and unlocks nothing for money — chipping in only helps pay the
+    running costs.</span>
 
     <!-- Hand-rolled, first-party buttons. The official Ko-fi widget is a
          third-party <script> plus an inline init, and this page runs inside the
@@ -261,8 +261,8 @@
           </svg>
         </span>
         <span class="tip-label">
-          <span class="tip-base">Support Tawny on Ko-fi</span>
-          <span class="tip-alt" aria-hidden="true">ko-fi.com</span>
+          <span class="tip-base" data-i18n="w_kofi">Support Tawny on Ko-fi</span>
+          <span class="tip-alt" aria-hidden="true" translate="no">ko-fi.com</span>
         </span>
       </a>
 
@@ -274,8 +274,8 @@
           </svg>
         </span>
         <span class="tip-label">
-          <span class="tip-base">Tip in Bitcoin</span>
-          <span class="tip-alt" aria-hidden="true">Lightning</span>
+          <span class="tip-base" data-i18n="w_tip_title">Tip in Bitcoin</span>
+          <span class="tip-alt" aria-hidden="true" translate="no">Lightning</span>
         </span>
       </a>
     </span>
@@ -287,12 +287,12 @@
 <!-- ============================ ROLE ============================ -->
 <main id="role" class="screen app" tabindex="-1" hidden>
   <header class="appbar">
-    <button id="role-back" class="appbar-back" type="button" aria-label="Back to channels">
+    <button id="role-back" class="appbar-back" type="button" aria-label="Back to channels" data-i18n-aria="w_back_channels">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4.5 7.8 12 15 19.5"/></svg>
     </button>
     <div class="appbar-titles">
       <h1 id="role-name">Living room</h1>
-      <p class="appbar-sub">Pick this device's job</p>
+      <p class="appbar-sub" data-i18n="w_role_sub">Pick this device’s job</p>
     </div>
     <span class="appbar-slot"></span>
   </header>
@@ -317,9 +317,9 @@
             <circle cx="37" cy="19.5" r="1.8" fill="var(--panel)"/>
           </svg>
         </span>
-        <span class="role-tag">The Monitor</span>
-        <strong>Leave it with the pet</strong>
-        <em>Sends camera and microphone, answers on its own, plays chimes, and
+        <span class="role-tag" data-i18n="w_role_monitor">The Monitor</span>
+        <strong data-i18n="w_role_monitor_line">Leave it with the pet</strong>
+        <em data-i18n="w_role_monitor_blurb">Sends camera and microphone, answers on its own, plays chimes, and
           shows a pairing code for your phone.</em>
         <span class="role-go" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg>
@@ -342,9 +342,9 @@
             <circle cx="24" cy="6.6" r="1" fill="var(--panel)"/>
           </svg>
         </span>
-        <span class="role-tag">The Viewer</span>
-        <strong>Keep it with you</strong>
-        <em>Watch and listen, hold to talk, ring a chime, save a snapshot.</em>
+        <span class="role-tag" data-i18n="w_role_viewer">The Viewer</span>
+        <strong data-i18n="w_role_viewer_line">Keep it with you</strong>
+        <em data-i18n="w_role_viewer_blurb">Watch and listen, hold to talk, ring a chime, save a snapshot.</em>
         <span class="role-go" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg>
         </span>
@@ -363,17 +363,17 @@
     <span class="join-seal" aria-hidden="true">
       <img class="join-mark" src="icon.svg" alt="" width="60" height="60">
     </span>
-    <h1 class="hero-title">Pairing code accepted</h1>
-    <p class="join-body">You're about to join <b id="join-name">the monitor</b> as
-      a handset.</p>
+    <h1 class="hero-title" data-i18n="w_join_title">Pairing code accepted</h1>
+    <p class="join-body"><span data-i18n="w_join_pre">You’re about to join</span>
+      <b id="join-name">the monitor</b> <span data-i18n="w_join_post">as a Viewer.</span></p>
     <p id="join-note" class="warn" hidden></p>
    </div>
   </div>
 
   <div class="screen-foot">
     <div class="wrap">
-      <button id="join-go" class="wide primary" type="button">Join now</button>
-      <button id="join-cancel" class="wide ghost" type="button">Not now</button>
+      <button id="join-go" class="wide primary" type="button" data-i18n="w_join_go">Join now</button>
+      <button id="join-cancel" class="wide ghost" type="button" data-i18n="w_not_now">Not now</button>
     </div>
   </div>
 </main>
@@ -408,9 +408,9 @@
         <span id="announcechip" hidden role="img" aria-label="Viewers are announced with a sound" data-i18n-aria="w_aria_announce">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.6 1.8H4.4Z"/><path d="M10 20.6a2.2 2.2 0 0 0 4 0"/></svg><b data-i18n="w_announce_chip">Announced</b>
         </span>
-        <span id="peercount" class="tag-count" hidden role="button" tabindex="0" aria-label="Phones watching" data-i18n-aria="w_aria_phones_watching">
+        <button id="peercount" class="tag-count" type="button" hidden aria-label="Phones watching" data-i18n-aria="w_aria_phones_watching">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.6"/><line x1="10.5" y1="18.4" x2="13.5" y2="18.4"/></svg><b></b>
-        </span>
+        </button>
         <span id="peerlabel" class="tag-device" hidden></span>
         <!-- Handheld only: the Monitor's live battery, mirrored as it changes. -->
         <span id="battchip" class="tag-batt" hidden>
@@ -528,24 +528,24 @@
      scrim, the way a phone presents a modal — see openSheet()/closeSheet()
      in app.js and the `.sheet` block in style.css. -->
 <div id="pair" class="sheet" hidden>
-  <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Pair a handset">
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="pair-title">
     <span class="sheet-grip" aria-hidden="true"></span>
-    <h2>Pair a handset</h2>
-    <p class="hint">Point your phone's camera at this code. It opens Tawny
-      already joined to <b id="pair-name"></b>.</p>
+    <h2 id="pair-title" data-i18n="w_pair_title">Pair a Viewer</h2>
+    <p class="hint"><span data-i18n="w_pair_hint">Point your phone’s camera at this code. It opens Tawny
+      already joined to</span> <b id="pair-name"></b>.</p>
 
     <canvas id="qr" class="qr" width="300" height="300"></canvas>
 
     <p id="pair-expiry" class="hint"></p>
 
     <label class="field">
-      <span>Address the handset will use</span>
+      <span data-i18n="w_pair_profile">Address the Viewer will use</span>
       <select id="pair-profile"></select>
     </label>
 
     <div id="pair-custom-wrap" class="field" hidden>
-      <span>Address</span>
-      <input id="pair-custom" spellcheck="false" autocapitalize="off"
+      <span id="pair-custom-label" data-i18n="w_pair_address">Address</span>
+      <input id="pair-custom" aria-labelledby="pair-custom-label" type="url" inputmode="url" autocomplete="off" spellcheck="false" autocapitalize="off"
              placeholder="https://tawny.example.net">
     </div>
 
@@ -554,20 +554,20 @@
     <code id="pair-url" class="pair-url"></code>
 
     <details id="pair-relay" class="relay-hint" hidden>
-      <summary>Pairing with the Tawny app?</summary>
+      <summary data-i18n="w_relay_summary">Pairing with the Tawny app?</summary>
       <div class="relay-hint-body">
-        <p>The app can't open a web link. On that phone, open Tawny, press and
+        <p data-i18n-rich="w_relay_body">The app can’t open a web link. On that phone, open Tawny, press and
           hold the version number at the bottom of the first screen, then choose
           <b>Servers</b> and paste this into <b>Rendezvous</b>.</p>
         <code id="pair-relay-addr" class="pair-url"></code>
-        <button id="pair-relay-copy" class="wide ghost" type="button">Copy server address</button>
-        <p class="fine">Both devices have to use the same server to find each other.</p>
+        <button id="pair-relay-copy" class="wide ghost" type="button" data-i18n="w_relay_copy">Copy server address</button>
+        <p class="fine" data-i18n="w_relay_fine">Both devices have to use the same server to find each other.</p>
       </div>
     </details>
 
     <div class="sheet-actions">
-      <button id="pair-copy" class="wide ghost" type="button">Copy link</button>
-      <button id="pair-close" class="wide" type="button">Done</button>
+      <button id="pair-copy" class="wide ghost" type="button" data-i18n="w_pair_copy">Copy link</button>
+      <button id="pair-close" class="wide" type="button" data-i18n="w_done">Done</button>
     </div>
   </div>
 </div>
@@ -603,8 +603,8 @@
           </svg>
         </span>
         <span class="tip-label">
-          <span class="tip-base">Support Tawny on Ko-fi</span>
-          <span class="tip-alt" aria-hidden="true">ko-fi.com</span>
+          <span class="tip-base" data-i18n="w_kofi">Support Tawny on Ko-fi</span>
+          <span class="tip-alt" aria-hidden="true" translate="no">ko-fi.com</span>
         </span>
       </a>
       <a class="tip tip-bolt" href="https://strike.me/@loustrikes"
@@ -615,8 +615,8 @@
           </svg>
         </span>
         <span class="tip-label">
-          <span class="tip-base">Tip in Bitcoin</span>
-          <span class="tip-alt" aria-hidden="true">Lightning</span>
+          <span class="tip-base" data-i18n="w_tip_title">Tip in Bitcoin</span>
+          <span class="tip-alt" aria-hidden="true" translate="no">Lightning</span>
         </span>
       </a>
     </span>
@@ -720,16 +720,16 @@
 <div id="editor" class="sheet" hidden>
   <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="editor-title">
     <span class="sheet-grip" aria-hidden="true"></span>
-    <h2 id="editor-title">New channel</h2>
+    <h2 id="editor-title" data-i18n="w_ch_new">New channel</h2>
     <label class="field">
-      <span>Name</span>
-      <input id="editor-name" maxlength="40" spellcheck="false" placeholder="Living room">
+      <span data-i18n="w_editor_name">Name</span>
+      <input id="editor-name" name="channel-name" maxlength="40" spellcheck="false" autocomplete="off" placeholder="Living room" data-i18n-ph="w_editor_ph">
     </label>
     <p class="hint" id="editor-hint">A fresh key is generated for this channel.
       Only devices you pair can join it.</p>
     <div class="sheet-actions">
-      <button id="editor-cancel" class="wide ghost" type="button">Cancel</button>
-      <button id="editor-save" class="wide primary" type="button">Save</button>
+      <button id="editor-cancel" class="wide ghost" type="button" data-i18n="w_cancel">Cancel</button>
+      <button id="editor-save" class="wide primary" type="button" data-i18n="w_save">Save</button>
     </div>
   </div>
 </div>
@@ -741,56 +741,73 @@
 <div id="row-menu" class="sheet" hidden>
   <div class="sheet-card menu-card" role="dialog" aria-modal="true" aria-labelledby="row-menu-title">
     <span class="sheet-grip" aria-hidden="true"></span>
-    <h2 id="row-menu-title">Channel</h2>
+    <h2 id="row-menu-title" data-i18n="w_menu_channel">Channel</h2>
     <div class="menu-list">
       <button id="row-rename" class="menu-item" type="button">
         <span class="menu-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M4 20h4l10-10-4-4L4 16v4Z"/><path d="m14.5 5.5 4 4"/></svg>
         </span>
-        <span>Rename</span>
+        <span data-i18n="w_menu_rename">Rename</span>
       </button>
       <button id="row-switch-role" class="menu-item" type="button">
         <span class="menu-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M17 2.1 21 6l-4 3.9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 21.9 3 18l4-3.9"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         </span>
-        <span>Switch role</span>
+        <span data-i18n="w_menu_switch_role">Switch role</span>
       </button>
       <button id="row-delete" class="menu-item danger" type="button">
         <span class="menu-ico" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V4.5h4V7m-8 0 1 13h10l1-13"/></svg>
         </span>
-        <span>Delete channel</span>
+        <span data-i18n="w_menu_delete">Delete channel</span>
       </button>
     </div>
     <div class="sheet-actions">
-      <button id="row-cancel" class="wide ghost" type="button">Cancel</button>
+      <button id="row-cancel" class="wide ghost" type="button" data-i18n="w_cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= DELETE CHANNEL ======================== -->
+<div id="del-confirm" class="sheet" hidden>
+  <div class="sheet-card" role="alertdialog" aria-modal="true" aria-labelledby="del-title" aria-describedby="del-body">
+    <span class="sheet-grip" aria-hidden="true"></span>
+    <h2 id="del-title">Delete channel?</h2>
+    <p class="hint" id="del-body" data-i18n="w_del_body">Devices paired to it will stop connecting. You can pair them again later.</p>
+    <div class="sheet-actions">
+      <button id="del-cancel" class="wide ghost" type="button" data-i18n="w_cancel">Cancel</button>
+      <button id="del-go" class="wide primary danger" type="button" data-i18n="w_del_go">Delete</button>
     </div>
   </div>
 </div>
 
 <!-- ========================== SCANNER =========================== -->
 <div id="scanner" class="sheet" hidden>
-  <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Scan pairing code">
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="scan-title">
     <span class="sheet-grip" aria-hidden="true"></span>
-    <h2>Scan pairing code</h2>
+    <h2 id="scan-title" data-i18n="w_scan_code">Scan pairing code</h2>
     <div class="scan-frame">
       <video id="scan-video" class="scan-video" playsinline autoplay muted></video>
       <span class="scan-reticle" aria-hidden="true"></span>
     </div>
-    <p class="hint" id="scan-hint">Hold the monitor's code in frame.</p>
+    <p class="hint" id="scan-hint" data-i18n="w_scan_hint">Hold the Monitor’s code in frame.</p>
     <div class="sheet-actions">
-      <button id="scan-paste" class="wide ghost" type="button">Paste link instead</button>
-      <button id="scan-close" class="wide ghost" type="button">Cancel</button>
+      <button id="scan-paste" class="wide ghost" type="button" data-i18n="w_scan_paste">Paste link instead</button>
+      <button id="scan-close" class="wide ghost" type="button" data-i18n="w_cancel">Cancel</button>
     </div>
   </div>
 </div>
 
 <div id="dimmer" class="dimmer" hidden>
   <div id="dim-meter" class="meter big"></div>
-  <p class="dim-label">On air — tap to wake the screen</p>
+  <button id="dim-wake" class="dim-label" type="button" data-i18n="w_dim_wake">On air — tap to wake the screen</button>
 </div>
 
-<div id="toast" class="toast" hidden></div>
+<div id="toast" class="toast" hidden aria-hidden="true"></div>
+<!-- What the toast and the live status say, for screen readers. The toast
+     itself is shown and hidden, which a live region does not reliably survive,
+     so this one stays put and only its text changes. -->
+<div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
 
 <script src="i18n.js"></script>
 <!-- QR decoder for the in-browser scanner. Bundled (no CDN). Used only when the
