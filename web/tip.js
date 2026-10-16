@@ -130,7 +130,53 @@ function listen(watch) {
 
 // ---- the sheet ---------------------------------------------------------------------------
 
-const S = { pick: 0, ticket: 0, invoice: '', listener: null, open: null, close: null, noWallet: false, made: null, toast: null };
+const S = { pick: 0, ticket: 0, invoice: '', listener: null, open: null, close: null, noWallet: false, made: null, toast: null, mode: 'web' };
+
+// ---- where invoices come from -------------------------------------------------------------
+//
+// 'web'     this page asks Strike and the relays itself (Desktop, Docker, browsers);
+// 'native'  the Android app does, through window.TawnySupport (TipZap.kt): the WebView's
+//           CSP stays as narrow as the live view's;
+// 'handoff' the Play build: the address only — Open wallet, a QR of the address,
+//           strike.me. No amounts, no invoice, nothing fetched (Play Payments policy).
+
+export function setTipMode(mode) { S.mode = mode; }
+
+const native = () => window.TawnySupport;
+let nativeSeq = 0;
+const nativeWait = new Map();
+const nativeCall = (fn, ...args) => new Promise((resolve, reject) => {
+  const id = ++nativeSeq;
+  nativeWait.set(id, { resolve, reject });
+  setTimeout(() => { if (nativeWait.delete(id)) reject(new Error('timeout')); }, 20000);
+  native()[fn](id, ...args);
+});
+window.tawnyTipPrice = (id, usd) => { nativeWait.get(id)?.resolve(usd); nativeWait.delete(id); };
+window.tawnyTipInvoice = (id, pr, err) => {
+  const w = nativeWait.get(id); nativeWait.delete(id);
+  if (!w) return;
+  pr ? w.resolve(pr) : w.reject(new Error(err || 'no invoice'));
+};
+const nativePaid = new Map();
+window.tawnyTipPaid = (id) => { nativePaid.get(id)?.(true); nativePaid.delete(id); };
+
+async function fetchPrice() {
+  if (S.mode === 'native') return nativeCall('price').then((p) => (p > 0 ? p : null)).catch(() => null);
+  try { const p = parseFloat((await getJson(PRICE)).data.amount); return p > 0 ? p : null; } catch { return null; }
+}
+
+/** An invoice and, when it is a zap, a way to hear it paid: { pr, listener|null }. */
+async function makeInvoice(sats) {
+  if (S.mode === 'native') {
+    const id = nativeSeq + 1;
+    const pr = await nativeCall('invoice', sats);
+    let done;
+    const promise = new Promise((r) => { done = r; nativePaid.set(id, r); });
+    return { pr, listener: { promise, stop: () => { nativePaid.delete(id); done(false); try { native().stop(); } catch {} } } };
+  }
+  const { pr, watch } = await invoiceFor(sats);
+  return { pr, listener: watch ? listen(watch) : null };
+}
 const toSats = (usd) => Math.max(1, Math.round((usd / price) * 1e8));
 const amountAt = (i) => (price ? { usd: USD[i], sats: toSats(USD[i]) } : { usd: null, sats: SATS_IF_OFFLINE[i] });
 const fmtSats = (n) => t('w_tip_sats', n.toLocaleString());
@@ -160,10 +206,12 @@ function stopListening() {
  */
 function qrSvg(text) {
   const qr = qrcode(0, 'M');
-  qr.addData(text, 'Alphanumeric');
+  // Invoices fit QR's compact alphanumeric set; an address has an '@', which doesn't.
+  qr.addData(text, /^[0-9A-Z $%*+\-./:]*$/.test(text) ? 'Alphanumeric' : 'Byte');
   qr.make();
   const n = qr.getModuleCount();
-  const q = 2;                                   // quiet zone, in modules
+  const q = 4;                                   // quiet zone, in modules: the standard's four, so the
+                                                 // code still reads on a dark-theme screen
   const eyes = [[0, 0], [0, n - 7], [n - 7, 0]];
   const inEye = (r, c) => eyes.some(([er, ec]) => r >= er && r < er + 7 && c >= ec && c < ec + 7);
   const hole = Math.ceil(n * 0.16) | 1, h0 = (n - hole) / 2;   // the badge's patch
@@ -175,7 +223,9 @@ function qrSvg(text) {
       dots += `<rect x="${c + q + 0.04}" y="${r + q + 0.04}" width=".92" height=".92" rx=".28"/>`;
     }
   }
-  const eye = ([r, c], cls) => `<g class="qr-eye ${cls}" style="transform-origin:${c + q + 3.5}px ${r + q + 3.5}px">`
+  // No style="" here: the page's CSP (style-src 'self') drops inline styles;
+  // the stylesheet centres each eye with transform-box instead.
+  const eye = ([r, c], cls) => `<g class="qr-eye ${cls}">`
     + `<rect x="${c + q + 0.5}" y="${r + q + 0.5}" width="6" height="6" rx="1.9" fill="none" stroke-width="1"/>`
     + `<rect x="${c + q + 2}" y="${r + q + 2}" width="3" height="3" rx=".95"/></g>`;
   const size = n + q * 2;
@@ -252,16 +302,16 @@ async function choose(i) {
   const mine = S.ticket;
   setState('loading', t('w_tip_making'));
   try {
-    const { pr, watch } = await invoiceFor(amount.sats);
-    if (mine !== S.ticket) return;
+    const { pr, listener } = await makeInvoice(amount.sats);
+    if (mine !== S.ticket) { listener?.stop(); return; }
     S.invoice = pr;
     $('#tip-qr-img').innerHTML = qrSvg(('lightning:' + pr).toUpperCase());
     $('#tip-code').textContent = pr.slice(0, 20) + '…' + pr.slice(-8);
     $('#tip-wallet').href = 'lightning:' + pr;
     S.made = amount;
     drawAmounts();
-    if (watch) {
-      S.listener = listen(watch);
+    if (listener) {
+      S.listener = listener;
       S.listener.promise.then((paid) => { if (paid && mine === S.ticket) landed(amount); });
     }
     setState('qr');
@@ -306,7 +356,23 @@ export function openSupport() {
 }
 
 /** The Lightning page, from the hub. */
+/** The Play build's Lightning page: the address, no amounts, no invoice. */
+function showHandoff() {
+  view('pick');
+  $('#tip-pick').classList.add('handoff');
+  $('#tip-sub').textContent = t('w_tip_handoff_sub');
+  $('#tip-qr-img').innerHTML = qrSvg('lightning:' + LN_ADDRESS);
+  $('#tip-code').textContent = LN_ADDRESS;
+  $('#tip-copy').textContent = t('w_tip_copy_address');
+  $('#tip-wallet').href = 'lightning:' + LN_ADDRESS;
+  S.invoice = LN_ADDRESS;
+  drawWallet();
+  setState('qr');
+  $('#tip-back').focus({ focusVisible: false });
+}
+
 async function showLightning() {
+  if (S.mode === 'handoff') { showHandoff(); return; }
   view('pick');
   S.pick = 0;
   S.made = null;
@@ -315,15 +381,17 @@ async function showLightning() {
   drawWallet();
   setState('loading', t('w_tip_making'));
   $('#tip-back').focus({ focusVisible: false });
-  if (price === null) {
-    try { const p = parseFloat((await getJson(PRICE)).data.amount); if (p > 0) price = p; } catch {}
-  }
+  if (price === null) price = await fetchPrice();
   choose(S.pick);
 }
 
 export function closeTip() {
   stopListening();
   S.close();
+  // The Android app's Support screen is nothing but this sheet: closing it goes back.
+  if (document.documentElement.classList.contains('support-shell')) {
+    setTimeout(() => { try { native()?.close(); } catch {} }, 280);
+  }
 }
 
 export function setupTip(openSheet, closeSheet, toast) {
@@ -352,9 +420,12 @@ export function setupTip(openSheet, closeSheet, toast) {
   $('#tip-other').addEventListener('submit', (e) => { e.preventDefault(); choose(USD.length); });
   $('#tip-retry').addEventListener('click', () => choose(S.pick));
   $('#tip-copy').addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(S.invoice); $('#tip-copy').textContent = t('w_tip_copied'); }
-    catch { $('#tip-copy').textContent = t('w_tip_copy_failed'); }
-    setTimeout(() => ($('#tip-copy').textContent = t('w_tip_copy')), 1800);
+    const label = S.mode === 'handoff' ? 'w_tip_copy_address' : 'w_tip_copy';
+    try {
+      if (native()) native().copy(S.invoice); else await navigator.clipboard.writeText(S.invoice);
+      $('#tip-copy').textContent = t('w_tip_copied');
+    } catch { $('#tip-copy').textContent = t('w_tip_copy_failed'); }
+    setTimeout(() => ($('#tip-copy').textContent = t(label)), 1800);
   });
   $('#tip-wallet').addEventListener('click', (e) => {
     if ($('#tip-wallet').hasAttribute('aria-disabled')) { e.preventDefault(); return; }
@@ -373,6 +444,12 @@ export function setupTip(openSheet, closeSheet, toast) {
   });
   $('#tip-close').addEventListener('click', closeTip);
   $('#tip-done').addEventListener('click', closeTip);
+  // The Android app found nothing to open lightning: with.
+  window.tawnyNoWallet = () => {
+    S.noWallet = true;
+    drawWallet();
+    S.toast?.(t('w_tip_no_wallet_toast'));
+  };
   // A link straight to the hub (docs, a website): …/#support
   if (location.hash === '#support') openSupport();
   // Every Support button (app bar heart, channels card, update board) opens the hub.

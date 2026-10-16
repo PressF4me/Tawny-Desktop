@@ -367,11 +367,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
      soft   → --raise       accent (the only one) → --berry
    Radii: 8 buttons · 14 plates and cards · full for pills and orbs. */
 :root {
+  --heart: #e0344f;   /* the Support heart: red on every palette, never the accent */
   --sup-lift: 0 0 0 1px rgba(0, 0, 0, .02), 0 2px 6px rgba(0, 0, 0, .04), 0 4px 8px rgba(0, 0, 0, .1);
   --sup-plate: color-mix(in srgb, var(--berry) 9%, var(--raise));
 }
 
-.appbar-heart { color: var(--berry); }
+.appbar-heart { color: var(--heart); }
 .appbar-heart svg {
   width: 21px; height: 21px; fill: currentColor; stroke: none;
   transform-origin: 50% 55%;
@@ -383,12 +384,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
   90% { transform: scale(1.22); } 92% { transform: scale(1.02); } 94% { transform: scale(1.14); } 96% { transform: scale(1); }
 }
 
-/* ---- the card under the channel list: picture plate (the owlet), title, one line */
+/* ---- the card under the channel list: stands out by inverting the page — an
+   ink card with paper text (dark on light, light on dark, ~11:1) — with the
+   owlet and a red heart that beats softly. Compact. */
 .support-card {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0 16px;
-  width: 100%; margin-top: 16px; padding: 12px 16px 12px 12px; min-height: 80px;
-  text-align: left; font: inherit; color: var(--fg);
-  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0 12px;
+  width: 100%; margin-top: 16px; padding: 8px 14px 8px 8px; min-height: 60px;
+  text-align: left; font: inherit; color: var(--bg);
+  background: var(--fg); border: 0; border-radius: 14px;
   -webkit-tap-highlight-color: transparent;
   transition: box-shadow .2s ease, transform .2s cubic-bezier(.2, .8, .3, 1);
 }
@@ -396,33 +399,35 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .support-card:active { transform: scale(.985); }
 .support-card-ico {
   position: relative; display: grid; place-items: center;
-  width: 56px; height: 56px; border-radius: 14px; background: var(--sup-plate);
+  width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--bg) 14%, transparent);
 }
-.support-card-ico canvas { width: 52px; height: 46px; }
+.support-card-ico canvas { width: 40px; height: 36px; }
 .support-card-heart {
-  position: absolute; right: -5px; bottom: -4px; width: 22px; height: 22px; fill: var(--berry);
-  transform-origin: 50% 55%; animation: heart-idle 7s 1.5s ease-in-out infinite;
+  position: absolute; right: -6px; bottom: -5px; width: 20px; height: 20px; fill: var(--heart);
+  transform-origin: 50% 55%; animation: heart-soft 2.8s 1s ease-in-out infinite;
 }
 .support-card-tt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.support-card-tt b { font-size: 16px; font-weight: 600; line-height: 1.25; }
-.support-card-tt span { font-size: 14px; line-height: 1.43; color: var(--dim); }
+.support-card-tt b { font-size: 15.5px; font-weight: 600; line-height: 1.25; }
+.support-card-tt span { font-size: 13px; line-height: 1.35; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .support-card-go svg {
   width: 20px; height: 20px; display: block;
   fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
 }
-.support-card-go { color: var(--fg); transition: transform .14s ease; }
+.support-card-go { color: var(--bg); transition: transform .14s ease; }
+.support-card:active { background: color-mix(in srgb, var(--fg) 88%, var(--bg)); }
+@keyframes heart-soft { 0%, 70%, 100% { transform: scale(1); } 80% { transform: scale(1.18); } 90% { transform: scale(1.04); } }
 .support-card:hover .support-card-go { transform: translateX(3px); }
 
 /* ---- the update board's way in: the accent pill */
 .wn-support {
   display: inline-flex; align-items: center; gap: 8px; align-self: center;
   margin-top: 16px; padding: 10px 20px; min-height: 44px;
-  font: inherit; font-size: 14px; font-weight: 600; color: var(--on-accent);
-  background: var(--berry); border: 0; border-radius: 9999px;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--bg);
+  background: var(--fg); border: 0; border-radius: 9999px;
   -webkit-tap-highlight-color: transparent;
 }
-.wn-support:active { background: var(--berry-d); }
-.wn-support svg { width: 16px; height: 16px; fill: currentColor; transform-origin: 50% 55%; animation: heart-idle 6s 1s ease-in-out infinite; }
+.wn-support:active { background: color-mix(in srgb, var(--fg) 88%, var(--bg)); }
+.wn-support svg { width: 16px; height: 16px; fill: var(--heart); transform-origin: 50% 55%; animation: heart-soft 2.8s 1s ease-in-out infinite; }
 
 /* ---- the hub */
 .tip-hub { display: flex; flex-direction: column; gap: 8px; }
@@ -467,7 +472,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .hub-art { width: 62%; height: auto; }
 .hub-kofi .mug { fill: var(--fg); }
-.hub-kofi .mug-heart { fill: var(--berry); transform-origin: 40px 48px; animation: heart-idle 5s 2s ease-in-out infinite; }
+.hub-kofi .mug-heart { fill: var(--heart); transform-origin: 40px 48px; animation: heart-idle 5s 2s ease-in-out infinite; }
 .hub-kofi .steam {
   fill: none; stroke: var(--dim); stroke-width: 3.2; stroke-linecap: round;
   opacity: 0; animation: steam 2.6s ease-out infinite;
@@ -2716,7 +2721,7 @@ body:has(#live:not([hidden])) #theme-toggle {
 .tip-qr-img svg { display: block; width: 100%; height: 100%; }
 .tip-qr-img .qr-paper { fill: var(--qr-paper); }
 .tip-qr-img .qr-dots { fill: var(--qr-ink); }
-.tip-qr-img .qr-eye { color: var(--qr-ink); }   /* ink, like everything that isn't the accent */
+.tip-qr-img .qr-eye { color: var(--qr-ink); transform-box: fill-box; transform-origin: center; }   /* ink, like everything that isn't the accent */
 .tip-qr-img .qr-eye rect { stroke: currentColor; }
 .tip-qr-img .qr-eye rect + rect { fill: currentColor; stroke: none; }
 .tip-qr:not([data-state="qr"]) .tip-qr-img { visibility: hidden; }
@@ -2800,7 +2805,7 @@ body:has(#live:not([hidden])) #theme-toggle {
 @keyframes tip-rise { from { opacity: 0; transform: translateY(6px); } }
 .tip-hearts { position: absolute; inset: 0; pointer-events: none; }
 .tip-hearts span {
-  position: absolute; bottom: 35%; color: var(--berry); opacity: 0; font-size: calc(14px * var(--s, 1));
+  position: absolute; bottom: 35%; color: var(--heart); opacity: 0; font-size: calc(14px * var(--s, 1));
   animation: tip-drift 3s ease-out forwards;
 }
 @keyframes tip-drift {
@@ -2854,3 +2859,19 @@ body:has(#live:not([hidden])) #theme-toggle {
   .hub-kofi .mug-heart, .hub-orb .bolt { animation: none; }
 }
 [data-motion="off"] .hub-kofi .steam { display: none; }
+
+/* ------------------------------------------- support: inside the Android app
+ * The app's Support screen is a WebView showing only this sheet, so it fills
+ * the screen as a page of its own: no scrim, no grip, no slide, no theme
+ * button (the app has its own). */
+html.support-shell #theme-toggle { display: none; }
+html.support-shell #tip { background: var(--panel); align-items: stretch; }
+html.support-shell #tip .sheet-card {
+  width: min(560px, 100%); max-height: none; height: 100%; margin: 0 auto;
+  padding-top: calc(20px + var(--safe-t)); border: 0; border-radius: 0; box-shadow: none;
+  transform: none; transition: none;
+}
+html.support-shell #tip .sheet-grip { display: none; }
+
+/* The Play build's Lightning page: the address only. */
+#tip-pick.handoff .tip-amounts, #tip-pick.handoff .tip-other, #tip-pick.handoff .tip-waiting { display: none; }

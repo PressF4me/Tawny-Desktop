@@ -5,7 +5,7 @@
 // or join channels, and a channel cannot be guessed by name.
 
 import qrcode from './vendor/qrcode.mjs';
-import { setupTip, closeTip } from './tip.js';
+import { setupTip, closeTip, openSupport, setTipMode } from './tip.js';
 
 const $ = (s) => document.querySelector(s);
 const CHANNELS = 'tawny.channels.v1';
@@ -5241,6 +5241,25 @@ function runCoach(role, steps) {
 // Native-shell entry point. The Android app runs its own welcome / role /
 // pairing screens, then loads this page with #native and calls this to drop
 // straight into a live session. No-op in a plain browser.
+/**
+ * The Android app's "Support Tawny" screen: a WebView of its own over this
+ * page, showing only the Support sheet, full screen. Same opts as
+ * tawnyStart for theme, motion and language, plus how tips work there:
+ * "native" — invoices and receipts come through window.TawnySupport (TipZap),
+ * the page's CSP staying as narrow as the live view's; "handoff" — the Play
+ * build: the address, Open wallet and strike.me, no amounts, no invoice.
+ */
+window.tawnySupport = function (opts = {}) {
+  S.nativeShell = true;
+  document.documentElement.classList.add('support-shell');
+  if (opts.systemTheme === 'light' || opts.systemTheme === 'dark') shellSystemTheme = opts.systemTheme;
+  if (opts.theme) applyTheme(THEME_ORDER.includes(opts.theme) ? opts.theme : 'system');
+  if (opts.motion) applyMotion(opts.motion === 'off');
+  if (opts.lang && window.TawnyT) window.TawnyT.set(opts.lang);
+  setTipMode(opts.tip === 'handoff' ? 'handoff' : opts.tip === 'native' ? 'native' : 'web');
+  openSupport();
+};
+
 window.tawnyStart = function (role, key, name, signalUrl, rendezvousUrl, token, opts) {
   if (!key || !/^[A-Za-z0-9_-]{16,64}$/.test(key)) return false;
   S.nativeShell = true;
