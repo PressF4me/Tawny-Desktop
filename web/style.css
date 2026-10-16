@@ -337,119 +337,155 @@ button { font: inherit; color: inherit; cursor: pointer; }
   text-underline-offset: 2px;
 }
 
-/* --------------------------------------------------------- tip buttons
+/* --------------------------------------------------------- support
  *
- * Ko-fi and Lightning, drawn locally.
+ * "Support Tawny": a ♥ in the Channels app bar, a card under the channel list
+ * and a button on the update board all open one sheet (tip.js). It starts on
+ * a small hub — Buy a coffee on Ko-fi, or Tip in Bitcoin — the shape of
+ * Nudge's Support box, in Tawny's palette: Ko-fi wears berry, Lightning sky.
  *
- * NOT the official Ko-fi widget. That is a remote <script> from
- * storage.ko-fi.com plus an inline `kofiwidget2.init(...)` call, and this page
- * ships inside the WebView that also owns the TawnyNative JS bridge under
- * `default-src 'none'; script-src 'self'` (see SECURITY.md, "WebView
- * hardening"). Dropping it in means allowing a third-party origin AND
- * 'unsafe-inline' in the one document where a script injection reaches native
- * code — an actual security regression, traded for a button. So: two anchors,
- * an inline SVG mark each, and our own palette.
+ * Ko-fi is a plain first-party link, NOT the official Ko-fi widget. That is a
+ * remote <script> from storage.ko-fi.com plus an inline `kofiwidget2.init(...)`
+ * call, and this page ships inside the WebView that also owns the
+ * TawnyNative JS bridge under `default-src 'none'; script-src 'self'` (see
+ * SECURITY.md, "WebView hardening"). Dropping it in means allowing a
+ * third-party origin AND 'unsafe-inline' in the one document where a script
+ * injection reaches native code. If someone later builds a hosted marketing
+ * page outside the app, the widget's parameters are: brand blue #72a4f2,
+ * widget/page id A6N425ZWFE, script Widget_2.js. Not in here.
  *
- * If someone later builds a real hosted marketing page, outside the app and
- * outside this CSP, the official widget's parameters are:
- *   brand blue #72a4f2, widget/page id A6N425ZWFE, script Widget_2.js.
- * Do not bring any of that back in here.
- *
- * The motion is the native app's, ported: the fill sweeps left-to-right from a
- * scaleX(0) origin and a second label is revealed under it in lockstep — the
- * CSS twin of MainActivity's WipeLabel, down to sizing the label box to the
- * wider of the two strings so nothing reflows. On press each mark then plays
- * its own character, exactly as IconView does: the Ko-fi heart double-thumps
- * (beat()), the bolt takes one hard zap with a bloom behind it (strike()).
- * The global [data-motion="off"] block collapses all of it.
+ * Each icon keeps the press character the old pills had, ported from the
+ * native IconView: the coffee heart double-thumps (beat()), the bolt takes one
+ * hard zap with a bloom behind it (strike()). [data-motion="off"] collapses it.
  */
 
-.tips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-}
+.appbar-heart { color: var(--berry); }
+.appbar-heart svg { width: 21px; height: 21px; fill: currentColor; stroke: none; }
+.appbar-heart:active svg { animation: tip-beat .52s linear; }
 
-.tip {
-  --tip: var(--berry);
-  --tip-deep: var(--berry-d);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: inline-flex;
+.support-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 9px;
-  padding: 9px 15px;
-  border: 1px solid var(--tip);
-  border-radius: 11px;   /* the app's CONTROL radius */
-  color: var(--tip-deep);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.2;
+  gap: 0 13px;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 10px 12px 12px;
+  min-height: 66px;
+  text-align: left;
+  font: inherit;
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .16s ease, transform .13s cubic-bezier(.2, .8, .3, 1);
+}
+.support-card:hover { border-color: color-mix(in srgb, var(--berry) 55%, var(--line)); }
+.support-card:active { transform: scale(.985); }
+.support-card-ico {
+  display: grid; place-items: center; width: 42px; height: 42px;
+  border-radius: var(--r-ctl); color: var(--berry);
+  background: color-mix(in srgb, var(--berry) 14%, var(--panel));
+}
+.support-card-ico svg { width: 22px; height: 22px; fill: currentColor; }
+.support-card:active .support-card-ico svg { animation: tip-beat .52s linear; }
+.support-card-tt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.support-card-tt b { font-size: 15.5px; font-weight: 600; }
+.support-card-tt span { font-size: 12.5px; color: var(--dim); }
+.support-card-go svg, .hub-go svg {
+  width: 20px; height: 20px; display: block;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+.support-card-go { color: var(--dim); transition: color .14s ease, transform .14s ease; }
+.support-card:hover .support-card-go { color: var(--berry); transform: translateX(2px); }
+
+/* The update board's one way in. */
+.wn-support {
+  display: inline-flex; align-items: center; gap: 8px;
+  align-self: center;
+  margin-top: 14px;
+  padding: 10px 18px;
+  font: inherit; font-size: 14px; font-weight: 600;
+  color: var(--accent-ink);
+  background: none;
+  border: 1px solid var(--berry);
+  border-radius: 11px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .14s ease;
+}
+.wn-support:hover { background: color-mix(in srgb, var(--berry) 8%, transparent); }
+.wn-support svg { width: 17px; height: 17px; fill: var(--berry); }
+.wn-support:active svg { animation: tip-beat .52s linear; }
+
+/* The hub itself. */
+.tip-hub { display: flex; flex-direction: column; gap: 12px; }
+.tip-head-mark.hub-mark {
+  color: var(--berry);
+  background: color-mix(in srgb, var(--berry) 14%, var(--panel));
+}
+.hub-intro { margin: 0; font-size: 15px; line-height: 1.5; color: var(--fg); text-wrap: pretty; }
+.hub-rows { display: grid; gap: 9px; }
+.hub-row {
+  --acc: var(--berry);
+  --acc-ink: var(--accent-ink);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0 13px;
+  width: 100%;
+  min-height: 68px;
+  padding: 12px 10px 12px 12px;
+  text-align: left;
   text-decoration: none;
+  font: inherit;
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .16s ease, background .14s ease, transform .13s cubic-bezier(.2, .8, .3, 1);
+}
+.hub-bolt { --acc: var(--sky); --acc-ink: var(--sky-d); }
+.hub-row:hover { border-color: var(--acc); background: color-mix(in srgb, var(--acc) 6%, var(--panel)); }
+.hub-row:active { transform: scale(.985); background: color-mix(in srgb, var(--acc) 11%, var(--panel)); }
+.hub-row:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.hub-ico {
+  position: relative;
+  display: grid; place-items: center; width: 42px; height: 42px;
+  border-radius: var(--r-ctl); color: var(--acc-ink);
+  background: color-mix(in srgb, var(--acc) 14%, var(--panel));
+}
+.hub-ico svg { position: relative; z-index: 1; width: 22px; height: 22px; fill: currentColor; }
+.hub-ico::after {
+  content: ""; position: absolute; inset: 4px; border-radius: 50%;
+  background: var(--acc); opacity: 0; pointer-events: none;
+}
+.hub-tt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.hub-tt b { font-size: 15.5px; font-weight: 600; }
+.hub-tt small { font-size: 12.5px; color: var(--dim); }
+.hub-go { color: var(--dim); transition: color .14s ease, transform .14s ease; }
+.hub-row:hover .hub-go { color: var(--acc-ink); transform: translateX(2px); }
+.hub-kofi:hover .hub-go { transform: translate(1px, -1px); }
+.hub-kofi:active .hub-ico svg { animation: tip-beat .52s linear; }
+.hub-bolt:active .hub-ico svg { animation: tip-zap .38s linear; }
+.hub-bolt:active .hub-ico::after { animation: tip-bloom .38s ease-out; }
+.hub-foot { margin: 0; text-align: center; font-size: 13px; color: var(--dim); }
+
+/* Back to the hub from the Lightning page. */
+.tip-back {
+  flex: none; width: 40px; height: 40px; margin: 0 -4px 0 -8px;
+  display: grid; place-items: center; padding: 0;
+  color: var(--fg); background: none; border: 0; border-radius: 50%;
   -webkit-tap-highlight-color: transparent;
 }
-
-.tip-bolt { --tip: var(--sky); --tip-deep: var(--sky-d); }
-
-/* The wipe. Covers the resting label; the revealed one rides on top of it. */
-.tip::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: var(--tip-deep);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform .3s cubic-bezier(.15, .75, .3, 1);
+.tip-back:hover { background: var(--raise); }
+.tip-back svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
 }
 
-.tip:hover::before,
-.tip:focus-visible::before,
-.tip:active::before { transform: scaleX(1); }
-
-.tip-mark {
-  position: relative;
-  z-index: 2;          /* the mark stays legible on top of the fill */
-  display: inline-flex;
-  width: 17px;
-  height: 17px;
-  transition: color .14s ease-out;
-}
-
-.tip-mark svg { width: 100%; height: 100%; fill: currentColor; }
-
-.tip:hover .tip-mark,
-.tip:focus-visible .tip-mark,
-.tip:active .tip-mark { color: var(--on-accent); }
-
-/* Both strings share one grid cell, so the button is sized by the wider of
-   them and the swap never moves anything. */
-.tip-label {
-  position: relative;
-  display: inline-grid;
-  white-space: nowrap;
-}
-
-.tip-base, .tip-alt { grid-area: 1 / 1; }
-.tip-base { position: relative; z-index: 0; }
-
-.tip-alt {
-  position: relative;
-  z-index: 2;
-  color: var(--on-accent);
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path .3s cubic-bezier(.15, .75, .3, 1);
-}
-
-.tip:hover .tip-alt,
-.tip:focus-visible .tip-alt,
-.tip:active .tip-alt { clip-path: inset(0 0 0 0); }
-
-.tip:focus-visible { outline: 2px solid var(--tip); outline-offset: 2px; }
-
-/* The press. One shot each, in character — see IconView.beat / IconView.strike. */
+/* Press characters, from the native IconView. */
 @keyframes tip-beat {
   0%   { transform: scale(1); }
   22%  { transform: scale(1.28); }
@@ -467,27 +503,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
   100% { transform: translateX(0);      opacity: 1; }
 }
 
-/* ...and the bloom the bolt leaves behind it. */
-.tip-mark::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  /* the lighter accent over the deeper fill, so it blooms bright in both
-     palettes — currentColor would go near-black under the dark theme */
-  background: var(--tip);
-  opacity: 0;
-  pointer-events: none;
-}
-
 @keyframes tip-bloom {
   0%   { transform: scale(.55); opacity: .45; }
   100% { transform: scale(2);   opacity: 0; }
 }
 
-.tip-kofi:active .tip-mark svg { animation: tip-beat .52s linear; }
-.tip-bolt:active .tip-mark svg { animation: tip-zap .38s linear; }
-.tip-bolt:active .tip-mark::after { animation: tip-bloom .38s ease-out; }
 
 /* ------------------------------------------------------------- live */
 
@@ -2529,7 +2549,6 @@ body:has(#live:not([hidden])) #theme-toggle {
   line-height: 1.4;
   color: var(--dim);
 }
-.wn-tips { justify-content: center; margin-top: 14px; }
 .wn-card .sheet-actions { align-self: stretch; margin-top: 18px; }
 
 /* ------------------------------------------------------------ who's here */
@@ -2648,6 +2667,16 @@ body:has(#live:not([hidden])) #theme-toggle {
   background: #fff; border: 1px solid var(--line); border-radius: var(--r-card);
 }
 .tip-qr-img { width: 100%; height: 100%; }
+/* The bolt in the middle of the code, as Nudge draws it. Level M error
+   correction leaves room for a small centre mark. */
+.tip-qr-badge {
+  position: absolute; left: 50%; top: 50%;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 0 3px #fff, 0 1px 4px rgba(0, 0, 0, .18);
+}
+.tip-qr-badge svg { width: 18px; height: 18px; fill: #41708f; }
+.tip-qr:not([data-state="qr"]) .tip-qr-badge { display: none; }
 .tip-qr-img svg { display: block; width: 100%; height: 100%; }
 .tip-qr[data-state="qr"] .tip-qr-img { animation: tip-fade .25s ease; }
 .tip-qr:not([data-state="qr"]) .tip-qr-img { visibility: hidden; }

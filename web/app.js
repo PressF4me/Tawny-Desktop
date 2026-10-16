@@ -5444,7 +5444,7 @@ function showWhatsNew(r) {
 }
 
 $('#wn-done').addEventListener('click', () => closeSheet(el.whatsnew));
-setupTip(openSheet, closeSheet);
+setupTip(openSheet, closeSheet, toast);
 
 /** One burst of paper across the whole window, then the canvas goes idle. */
 function confetti(canvas) {

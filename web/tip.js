@@ -1,4 +1,7 @@
-// Tip in Bitcoin, over Lightning. The sheet offers $2 / $5 / $10 or a typed
+// Support Tawny. The sheet opens on a small hub — a coffee on Ko-fi, or a tip
+// in Bitcoin — the same shape as Nudge's Support box, in Tawny's own clothes.
+//
+// Tip in Bitcoin, over Lightning. The Lightning page offers $2 / $5 / $10 or a typed
 // amount; Tawny asks the Lightning Address's LNURL-pay service (Strike) for an
 // invoice of exactly that, so any wallet can pay it — scanned from a phone, or
 // opened in a wallet on this device. No wallet at all? strike.me takes it in
@@ -126,7 +129,7 @@ function listen(watch) {
 
 // ---- the sheet ---------------------------------------------------------------------------
 
-const S = { pick: 0, ticket: 0, invoice: '', listener: null, open: null, close: null };
+const S = { pick: 0, ticket: 0, invoice: '', listener: null, open: null, close: null, noWallet: false, made: null, toast: null };
 const toSats = (usd) => Math.max(1, Math.round((usd / price) * 1e8));
 const amountAt = (i) => (price ? { usd: USD[i], sats: toSats(USD[i]) } : { usd: null, sats: SATS_IF_OFFLINE[i] });
 const fmtSats = (n) => t('w_tip_sats', n.toLocaleString());
@@ -145,7 +148,19 @@ function stopListening() {
 }
 
 function view(name) {
-  for (const v of ['pick', 'thanks']) $('#tip-' + v).hidden = v !== name;
+  for (const v of ['hub', 'pick', 'thanks']) $('#tip-' + v).hidden = v !== name;
+  // The dialog is named by whatever page is up.
+  $('#tip .sheet-card').setAttribute('aria-labelledby', name === 'hub' ? 'hub-title' : 'tip-title');
+}
+
+// "Open wallet" hands the invoice to whatever app claims lightning:. A page
+// can't ask whether one exists, but it can tell when nothing took it: the
+// page never lost focus. Then the button goes, and strike.me says why it's
+// the way left.
+function drawWallet() {
+  const coarse = matchMedia('(pointer: coarse)').matches;
+  $('#tip-wallet').hidden = S.noWallet || !coarse;
+  $('#tip-strike').textContent = t(S.noWallet || !coarse ? 'w_tip_no_wallet' : 'w_tip_strike');
 }
 
 function drawAmounts() {
@@ -156,6 +171,10 @@ function drawAmounts() {
       const a = amountAt(i);
       b.querySelector('b').textContent = a.usd != null ? fmtUsd(a.usd) : fmtSats(a.sats);
       b.querySelector('small').textContent = a.usd != null ? fmtSats(a.sats) : '';
+    } else {
+      // "Other" shows what was typed once its code exists.
+      const m = S.pick === i && S.made;
+      b.querySelector('small').textContent = m ? (m.usd != null ? fmtUsd(m.usd) : fmtSats(m.sats)) : t('w_tip_any');
     }
   });
   $('#tip-other').hidden = S.pick !== USD.length;
@@ -177,6 +196,7 @@ function setState(state, msg) {
 
 async function choose(i) {
   S.pick = i;
+  S.made = null;
   stopListening();
   drawAmounts();
   const amount = i === USD.length ? otherAmount() : amountAt(i);
@@ -193,6 +213,8 @@ async function choose(i) {
     $('#tip-qr-img').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
     $('#tip-code').textContent = pr.slice(0, 20) + '…' + pr.slice(-8);
     $('#tip-wallet').href = 'lightning:' + pr;
+    S.made = amount;
+    drawAmounts();
     if (watch) {
       S.listener = listen(watch);
       S.listener.promise.then((paid) => { if (paid && mine === S.ticket) landed(amount); });
@@ -209,6 +231,8 @@ function landed(amount) {
   S.listener = null;
   $('#tip-got').textContent = amount.usd != null ? t('w_tip_got', fmtUsd(amount.usd), fmtSats(amount.sats)) : t('w_tip_got_sats', fmtSats(amount.sats));
   view('thanks');
+  // A soft bell as it lands — the Monitor's own chime, kept quiet.
+  try { const a = new Audio('sounds/bell.ogg'); a.volume = 0.45; a.play().catch(() => {}); } catch {}
   const box = $('#tip-hearts');
   box.textContent = '';
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -224,14 +248,23 @@ function landed(amount) {
   $('#tip-done').focus({ focusVisible: false });
 }
 
-/** Open the sheet. `openSheet`/`closeSheet` are app.js's, so it slides like the others. */
-export async function openTip() {
+/** Open the sheet on its hub. `openSheet`/`closeSheet` are app.js's, so it slides like the others. */
+export function openSupport() {
+  stopListening();
+  view('hub');
+  S.open();
+}
+
+/** The Lightning page, from the hub. */
+async function showLightning() {
   view('pick');
   S.pick = 0;
+  S.made = null;
   $('#tip-other-input').value = '';
   drawAmounts();
+  drawWallet();
   setState('loading', t('w_tip_making'));
-  S.open();
+  $('#tip-back').focus({ focusVisible: false });
   if (price === null) {
     try { const p = parseFloat((await getJson(PRICE)).data.amount); if (p > 0) price = p; } catch {}
   }
@@ -243,13 +276,21 @@ export function closeTip() {
   S.close();
 }
 
-export function setupTip(openSheet, closeSheet) {
+export function setupTip(openSheet, closeSheet, toast) {
+  S.toast = toast;
   const sheet = $('#tip');
   if (!sheet) return;
   S.open = () => openSheet(sheet);
   S.close = () => closeSheet(sheet);
   // A wallet app on this device is only likely on a phone; a desktop gets the QR.
-  $('#tip-wallet').hidden = !matchMedia('(pointer: coarse)').matches;
+  drawWallet();
+  $('#hub-lightning').addEventListener('click', showLightning);
+  $('#hub-close').addEventListener('click', closeTip);
+  $('#tip-back').addEventListener('click', () => {
+    stopListening();
+    view('hub');
+    $('#hub-lightning').focus({ focusVisible: false });
+  });
   document.querySelectorAll('#tip-amounts .tip-amt').forEach((b) =>
     b.addEventListener('click', () => {
       const i = Number(b.dataset.i);
@@ -265,9 +306,23 @@ export function setupTip(openSheet, closeSheet) {
     catch { $('#tip-copy').textContent = t('w_tip_copy_failed'); }
     setTimeout(() => ($('#tip-copy').textContent = t('w_tip_copy')), 1800);
   });
-  $('#tip-wallet').addEventListener('click', (e) => { if ($('#tip-wallet').hasAttribute('aria-disabled')) e.preventDefault(); });
+  $('#tip-wallet').addEventListener('click', (e) => {
+    if ($('#tip-wallet').hasAttribute('aria-disabled')) { e.preventDefault(); return; }
+    let left = false;
+    const away = () => { left = true; };
+    addEventListener('blur', away, { once: true });
+    document.addEventListener('visibilitychange', away, { once: true });
+    setTimeout(() => {
+      removeEventListener('blur', away);
+      document.removeEventListener('visibilitychange', away);
+      if (left || $('#tip').hidden) return;
+      S.noWallet = true;
+      drawWallet();
+      S.toast?.(t('w_tip_no_wallet_toast'));
+    }, 1600);
+  });
   $('#tip-close').addEventListener('click', closeTip);
   $('#tip-done').addEventListener('click', closeTip);
-  // every "Tip in Bitcoin" button (footer, update board) opens the sheet
-  document.querySelectorAll('a.tip-bolt').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); openTip(); }));
+  // Every Support button (app bar heart, channels card, update board) opens the hub.
+  document.querySelectorAll('[data-support]').forEach((b) => b.addEventListener('click', (e) => { e.preventDefault(); openSupport(); }));
 }

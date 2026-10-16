@@ -187,6 +187,11 @@
       <h1 class="wordmark" translate="no">Tawny</h1>
       <p class="appbar-sub" data-i18n="w_pet_monitor">Pet Monitor</p>
     </div>
+    <button id="ch-support" class="appbar-action appbar-heart" type="button" data-support
+            aria-label="Support Tawny" title="Support Tawny"
+            data-i18n-aria="w_support_title" data-i18n-title="w_support_title">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3C6.2 16.1 3 12.9 3 9.3 3 6.6 5.1 4.6 7.6 4.6c1.8 0 3.3 1 4.4 2.5 1.1-1.5 2.6-2.5 4.4-2.5 2.5 0 4.6 2 4.6 4.7 0 3.6-3.2 6.8-9 11z"/></svg>
+    </button>
     <button id="ch-add" class="appbar-action" type="button" aria-label="New channel"
             title="New channel" data-i18n-aria="w_ch_new" data-i18n-title="w_ch_new">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.5v13M5.5 12h13"/></svg>
@@ -243,42 +248,18 @@
     <span data-i18n="w_foot_free">Tawny is free and unlocks nothing for money — chipping in only helps pay the
     running costs.</span>
 
-    <!-- Hand-rolled, first-party buttons. The official Ko-fi widget is a
-         third-party <script> plus an inline init, and this page runs inside the
-         WebView that also owns the TawnyNative bridge under a strict
-         `script-src 'self'` CSP (SECURITY.md, "WebView hardening"). Loading it
-         would mean allowing a remote origin and 'unsafe-inline' in there — a
-         real regression to buy a button we can draw ourselves. -->
-    <span class="tips">
-      <a class="tip tip-kofi" href="https://ko-fi.com/tawnyone"
-         target="_blank" rel="noopener noreferrer">
-        <span class="tip-mark">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M12 7.3C9.1 5.3 8.5 3.9 9.3 3c.6-.7 1.8-.5 2.7.6.9-1.1 2.1-1.3 2.7-.6.8.9.2 2.3-2.7 4.3z"/>
-            <path d="M3.8 9.2h12.4v6.6a4.8 4.8 0 0 1-4.8 4.8H8.6a4.8 4.8 0 0 1-4.8-4.8z"/>
-            <path d="M16.7 10.6h1.1a3.2 3.2 0 0 1 0 6.4h-1.1v-2h1a1.2 1.2 0 0 0 0-2.4h-1z"/>
-            <path d="M3.1 21.1h13.8a.85.85 0 0 1 0 1.7H3.1a.85.85 0 0 1 0-1.7z"/>
-          </svg>
-        </span>
-        <span class="tip-label">
-          <span class="tip-base" data-i18n="w_kofi">Support Tawny on Ko-fi</span>
-          <span class="tip-alt" aria-hidden="true" translate="no">ko-fi.com</span>
-        </span>
-      </a>
-
-      <a class="tip tip-bolt" href="https://strike.me/@loustrikes"
-         target="_blank" rel="noopener noreferrer">
-        <span class="tip-mark">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M15 1.8 5.8 13.2h5.2L9 22.2l9.2-11.4H13z"/>
-          </svg>
-        </span>
-        <span class="tip-label">
-          <span class="tip-base" data-i18n="w_tip_title">Tip in Bitcoin</span>
-          <span class="tip-alt" aria-hidden="true" translate="no">Lightning</span>
-        </span>
-      </a>
-    </span>
+    <!-- One card into the Support sheet (tip.js). Ko-fi stays a plain link
+         inside it: the official widget is a third-party <script> plus inline
+         init, and this page shares the WebView with the TawnyNative bridge
+         under `script-src 'self'` (SECURITY.md, "WebView hardening"). -->
+    <button id="ch-support-card" class="support-card" type="button" data-support>
+      <span class="support-card-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.3C6.2 16.1 3 12.9 3 9.3 3 6.6 5.1 4.6 7.6 4.6c1.8 0 3.3 1 4.4 2.5 1.1-1.5 2.6-2.5 4.4-2.5 2.5 0 4.6 2 4.6 4.7 0 3.6-3.2 6.8-9 11z"/></svg></span>
+      <span class="support-card-tt">
+        <b data-i18n="w_support_title">Support Tawny</b>
+        <span data-i18n="w_support_card_sub">Buy a coffee, or tip in Bitcoin</span>
+      </span>
+      <span class="support-card-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg></span>
+    </button>
     </footer>
    </div>
   </div>
@@ -591,35 +572,10 @@
     <a id="wn-changelog" class="wn-changelog" href="#" target="_blank" rel="noopener noreferrer">
       <span data-i18n="w_whatsnew_changelog">Read the full changelog</span> ↗</a>
     <p class="wn-thanks" data-i18n="w_whatsnew_thanks">Thank you for supporting Tawny. It stays free for everyone because of people like you.</p>
-    <span class="tips wn-tips">
-      <a class="tip tip-kofi" href="https://ko-fi.com/tawnyone"
-         target="_blank" rel="noopener noreferrer">
-        <span class="tip-mark">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M12 7.3C9.1 5.3 8.5 3.9 9.3 3c.6-.7 1.8-.5 2.7.6.9-1.1 2.1-1.3 2.7-.6.8.9.2 2.3-2.7 4.3z"/>
-            <path d="M3.8 9.2h12.4v6.6a4.8 4.8 0 0 1-4.8 4.8H8.6a4.8 4.8 0 0 1-4.8-4.8z"/>
-            <path d="M16.7 10.6h1.1a3.2 3.2 0 0 1 0 6.4h-1.1v-2h1a1.2 1.2 0 0 0 0-2.4h-1z"/>
-            <path d="M3.1 21.1h13.8a.85.85 0 0 1 0 1.7H3.1a.85.85 0 0 1 0-1.7z"/>
-          </svg>
-        </span>
-        <span class="tip-label">
-          <span class="tip-base" data-i18n="w_kofi">Support Tawny on Ko-fi</span>
-          <span class="tip-alt" aria-hidden="true" translate="no">ko-fi.com</span>
-        </span>
-      </a>
-      <a class="tip tip-bolt" href="https://strike.me/@loustrikes"
-         target="_blank" rel="noopener noreferrer">
-        <span class="tip-mark">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M15 1.8 5.8 13.2h5.2L9 22.2l9.2-11.4H13z"/>
-          </svg>
-        </span>
-        <span class="tip-label">
-          <span class="tip-base" data-i18n="w_tip_title">Tip in Bitcoin</span>
-          <span class="tip-alt" aria-hidden="true" translate="no">Lightning</span>
-        </span>
-      </a>
-    </span>
+    <button id="wn-support" class="wn-support" type="button" data-support>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.3C6.2 16.1 3 12.9 3 9.3 3 6.6 5.1 4.6 7.6 4.6c1.8 0 3.3 1 4.4 2.5 1.1-1.5 2.6-2.5 4.4-2.5 2.5 0 4.6 2 4.6 4.7 0 3.6-3.2 6.8-9 11z"/></svg>
+      <span data-i18n="w_support_title">Support Tawny</span>
+    </button>
     <div class="sheet-actions">
       <button id="wn-done" class="wide primary" type="button" data-i18n="w_whatsnew_done">Let’s go</button>
     </div>
@@ -630,10 +586,42 @@
      Opened by every "Tip in Bitcoin" button (tip.js). Pick an amount, scan or
      open the invoice; when its zap receipt shows up the sheet says thank you. -->
 <div id="tip" class="sheet" hidden>
-  <div class="sheet-card tip-card" role="dialog" aria-modal="true" aria-labelledby="tip-title">
+  <div class="sheet-card tip-card" role="dialog" aria-modal="true" aria-labelledby="hub-title">
     <span class="sheet-grip" aria-hidden="true"></span>
-    <div id="tip-pick">
+    <div id="tip-hub" class="tip-hub">
       <div class="tip-head">
+        <span class="tip-head-mark hub-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.3C6.2 16.1 3 12.9 3 9.3 3 6.6 5.1 4.6 7.6 4.6c1.8 0 3.3 1 4.4 2.5 1.1-1.5 2.6-2.5 4.4-2.5 2.5 0 4.6 2 4.6 4.7 0 3.6-3.2 6.8-9 11z"/></svg></span>
+        <div>
+          <h2 id="hub-title" data-i18n="w_support_title">Support Tawny</h2>
+          <p class="hint" data-i18n="w_support_sub">Free for everyone, for good</p>
+        </div>
+      </div>
+      <p class="hub-intro" data-i18n="w_support_intro">Tawny is free, has no ads and doesn’t collect anything about you. If you enjoy it, you can help keep it that way.</p>
+      <div class="hub-rows">
+        <a class="hub-row hub-kofi" href="https://ko-fi.com/tawnyone" target="_blank" rel="noopener noreferrer">
+          <span class="hub-ico" aria-hidden="true"><svg viewBox="0 0 24 24">
+            <path d="M12 7.3C9.1 5.3 8.5 3.9 9.3 3c.6-.7 1.8-.5 2.7.6.9-1.1 2.1-1.3 2.7-.6.8.9.2 2.3-2.7 4.3z"/>
+            <path d="M3.8 9.2h12.4v6.6a4.8 4.8 0 0 1-4.8 4.8H8.6a4.8 4.8 0 0 1-4.8-4.8z"/>
+            <path d="M16.7 10.6h1.1a3.2 3.2 0 0 1 0 6.4h-1.1v-2h1a1.2 1.2 0 0 0 0-2.4h-1z"/>
+            <path d="M3.1 21.1h13.8a.85.85 0 0 1 0 1.7H3.1a.85.85 0 0 1 0-1.7z"/>
+          </svg></span>
+          <span class="hub-tt"><b data-i18n="w_support_kofi">Buy a coffee</b><small data-i18n="w_support_kofi_sub">Card or PayPal on Ko-fi</small></span>
+          <span class="hub-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 16 16 8M9.5 8H16v6.5"/></svg></span>
+        </a>
+        <button id="hub-lightning" class="hub-row hub-bolt" type="button">
+          <span class="hub-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 1.8 5.8 13.2h5.2L9 22.2l9.2-11.4H13z"/></svg></span>
+          <span class="hub-tt"><b data-i18n="w_tip_title">Tip in Bitcoin</b><small data-i18n="w_support_ln_sub">Over Lightning with any wallet, or on strike.me</small></span>
+          <span class="hub-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4.5 16.2 12 9 19.5"/></svg></span>
+        </button>
+      </div>
+      <p class="hub-foot" data-i18n="w_support_thanks_line">Thank you for being here.</p>
+      <button id="hub-close" class="linkbtn tip-close" type="button" data-i18n="w_not_now">Not now</button>
+    </div>
+    <div id="tip-pick" hidden>
+      <div class="tip-head">
+        <button id="tip-back" class="tip-back" type="button" aria-label="Back" data-i18n-aria="w_back">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4.5 7.8 12 15 19.5"/></svg>
+        </button>
         <span class="tip-head-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 1.8 5.8 13.2h5.2L9 22.2l9.2-11.4H13z"/></svg></span>
         <div>
           <h2 id="tip-title" data-i18n="w_tip_title">Tip in Bitcoin</h2>
@@ -653,6 +641,7 @@
       </form>
       <div id="tip-qr" class="tip-qr" data-state="loading">
         <div id="tip-qr-img" class="tip-qr-img"></div>
+        <span class="tip-qr-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 1.8 5.8 13.2h5.2L9 22.2l9.2-11.4H13z"/></svg></span>
         <div class="tip-qr-state"><span class="tip-spin" aria-hidden="true"></span><span id="tip-qr-msg"></span>
           <button id="tip-retry" class="linkbtn" type="button" hidden data-i18n="w_tip_retry">Try again</button></div>
       </div>
@@ -660,7 +649,7 @@
       <p id="tip-waiting" class="tip-waiting"><span class="tip-spin small" aria-hidden="true"></span><span data-i18n="w_tip_waiting">Waiting for payment…</span></p>
       <div class="sheet-actions tip-actions">
         <a id="tip-wallet" class="wide primary" href="#" data-i18n="w_tip_open_wallet">Open wallet</a>
-        <a class="wide" href="https://strike.me/@loustrikes" target="_blank" rel="noopener noreferrer" data-i18n="w_tip_strike">Pay on strike.me</a>
+        <a id="tip-strike" class="wide" href="https://strike.me/@loustrikes" target="_blank" rel="noopener noreferrer" data-i18n="w_tip_strike">Pay on strike.me</a>
       </div>
       <div class="tip-codeline">
         <span id="tip-code" class="tip-code">—</span>
