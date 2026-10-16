@@ -271,7 +271,6 @@
       w_dim_wake: 'On air — tap to wake the screen',
       // --- support hub ---
       w_support_title: 'Support Tawny',
-      w_support_sub: 'Free for everyone, for good',
       w_support_intro: 'Tawny is free, has no ads and doesn’t collect anything about you. If you enjoy it, you can help keep it that way.',
       w_support_kofi: 'Buy a coffee',
       w_support_kofi_sub: 'Card or PayPal on Ko-fi',
@@ -279,6 +278,7 @@
       w_support_thanks_line: 'Thank you for being here.',
       w_support_card_sub: 'Buy a coffee, or tip in Bitcoin',
       w_tip_no_wallet: 'No wallet? Pay on strike.me',
+      w_tip_qr_label: 'QR code of the Lightning invoice',
       w_tip_no_wallet_toast: 'No Lightning wallet opened here. Scan the code with your phone, or pay on strike.me.',
       w_aria_watching_one: '{0} phone watching',
       w_aria_watching_many: '{0} phones watching',
@@ -536,7 +536,6 @@
       w_dim_wake: 'Al aire: toca para encender la pantalla',
       // --- support hub ---
       w_support_title: 'Apoya a Tawny',
-      w_support_sub: 'Gratis para todos, siempre',
       w_support_intro: 'Tawny es gratis, no tiene anuncios y no recopila nada sobre ti. Si te gusta, puedes ayudar a que siga así.',
       w_support_kofi: 'Invita un café',
       w_support_kofi_sub: 'Con tarjeta o PayPal en Ko-fi',
@@ -544,6 +543,7 @@
       w_support_thanks_line: 'Gracias por estar aquí.',
       w_support_card_sub: 'Invita un café o da una propina en Bitcoin',
       w_tip_no_wallet: '¿Sin billetera? Paga en strike.me',
+      w_tip_qr_label: 'Código QR de la factura Lightning',
       w_tip_no_wallet_toast: 'No se abrió ninguna billetera Lightning aquí. Escanea el código con tu teléfono o paga en strike.me.',
       w_aria_watching_one: '{0} teléfono mirando',
       w_aria_watching_many: '{0} teléfonos mirando',
