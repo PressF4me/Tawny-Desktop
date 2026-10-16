@@ -359,23 +359,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
  * hard zap with a bloom behind it (strike()). [data-motion="off"] collapses it.
  */
 
-/* Fills. Flat colour throughout — a field per choice, tone steps for
-   surfaces. Light theme: deep berry and deep sky under white. Dark theme: the
-   accents are light (brass, sage), so they carry the dark ink instead.
-   Every pair is ≥ 4.5:1. */
+/* Support Tawny — structure after the Airbnb system in the design-md
+   library (picture-first cards, one accent used sparingly, selection in
+   ink, flat surfaces with a single hover lift, one loud number), worn in
+   Tawny's own palette, brush heading and pets.
+     ink    → --fg          muted → --dim        hairline → --line
+     soft   → --raise       accent (the only one) → --berry
+   Radii: 8 buttons · 14 plates and cards · full for pills and orbs. */
 :root {
-  --kofi: #b23f5d;  --bolt: #36607e;  --card-ink: #ffffff;
-  --stage: color-mix(in srgb, var(--berry) 12%, var(--panel));
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --kofi: #d1a46d;  --bolt: #a3b286;  --card-ink: #191410;
-    --stage: color-mix(in srgb, var(--berry) 16%, var(--panel));
-  }
-}
-:root[data-theme="dark"] {
-  --kofi: #d1a46d;  --bolt: #a3b286;  --card-ink: #191410;
-  --stage: color-mix(in srgb, var(--berry) 16%, var(--panel));
+  --sup-lift: 0 0 0 1px rgba(0, 0, 0, .02), 0 2px 6px rgba(0, 0, 0, .04), 0 4px 8px rgba(0, 0, 0, .1);
+  --sup-plate: color-mix(in srgb, var(--berry) 9%, var(--raise));
 }
 
 .appbar-heart { color: var(--berry); }
@@ -390,97 +383,93 @@ button { font: inherit; color: inherit; cursor: pointer; }
   90% { transform: scale(1.22); } 92% { transform: scale(1.02); } 94% { transform: scale(1.14); } 96% { transform: scale(1); }
 }
 
-/* ---- the card under the channel list: the owlet with a heart */
+/* ---- the card under the channel list: picture plate (the owlet), title, one line */
 .support-card {
-  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0 14px;
-  width: 100%; margin-top: 16px; padding: 10px 14px 10px 10px; min-height: 76px;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0 16px;
+  width: 100%; margin-top: 16px; padding: 12px 16px 12px 12px; min-height: 80px;
   text-align: left; font: inherit; color: var(--fg);
-  background: var(--stage); border: 0; border-radius: var(--r-card);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
   -webkit-tap-highlight-color: transparent;
-  transition: transform .16s cubic-bezier(.2, .8, .3, 1);
+  transition: box-shadow .2s ease, transform .2s cubic-bezier(.2, .8, .3, 1);
 }
-.support-card:hover { transform: translateY(-2px); }
+.support-card:hover { box-shadow: var(--sup-lift); }
 .support-card:active { transform: scale(.985); }
 .support-card-ico {
   position: relative; display: grid; place-items: center;
-  width: 56px; height: 56px; border-radius: 16px; background: var(--panel);
+  width: 56px; height: 56px; border-radius: 14px; background: var(--sup-plate);
 }
 .support-card-ico canvas { width: 52px; height: 46px; }
 .support-card-heart {
   position: absolute; right: -5px; bottom: -4px; width: 22px; height: 22px; fill: var(--berry);
   transform-origin: 50% 55%; animation: heart-idle 7s 1.5s ease-in-out infinite;
 }
-.support-card-tt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.support-card-tt b { font-size: 16px; font-weight: 600; }
-.support-card-tt span { font-size: 13px; color: var(--fg); }
+.support-card-tt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.support-card-tt b { font-size: 16px; font-weight: 600; line-height: 1.25; }
+.support-card-tt span { font-size: 14px; line-height: 1.43; color: var(--dim); }
 .support-card-go svg {
-  width: 22px; height: 22px; display: block;
+  width: 20px; height: 20px; display: block;
   fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
 }
-.support-card-go { color: var(--berry); transition: transform .14s ease; }
+.support-card-go { color: var(--fg); transition: transform .14s ease; }
 .support-card:hover .support-card-go { transform: translateX(3px); }
 
-/* ---- the update board's way in: one flat round button */
+/* ---- the update board's way in: the accent pill */
 .wn-support {
   display: inline-flex; align-items: center; gap: 8px; align-self: center;
-  margin-top: 14px; padding: 12px 22px;
-  font: inherit; font-size: 15px; font-weight: 600; color: var(--card-ink);
-  background: var(--kofi); border: 0; border-radius: 999px;
+  margin-top: 16px; padding: 10px 20px; min-height: 44px;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--on-accent);
+  background: var(--berry); border: 0; border-radius: 9999px;
   -webkit-tap-highlight-color: transparent;
-  transition: transform .16s cubic-bezier(.2, .8, .3, 1);
 }
-.wn-support:hover { transform: translateY(-2px); }
-.wn-support:active { transform: scale(.97); }
-.wn-support svg { width: 17px; height: 17px; fill: currentColor; transform-origin: 50% 55%; animation: heart-idle 6s 1s ease-in-out infinite; }
+.wn-support:active { background: var(--berry-d); }
+.wn-support svg { width: 16px; height: 16px; fill: currentColor; transform-origin: 50% 55%; animation: heart-idle 6s 1s ease-in-out infinite; }
 
 /* ---- the hub */
-.tip-hub { display: flex; flex-direction: column; gap: 10px; }
+.tip-hub { display: flex; flex-direction: column; gap: 8px; }
 
-/* The trio's stage: one flat field, the sheet's one centred moment. */
+/* The trio's plate: the picture leads, as a photo would. */
 .hub-stage {
   position: relative; overflow: hidden;
-  height: 176px; margin: 0 0 6px; border-radius: 22px;
-  background: var(--stage);
+  aspect-ratio: 16 / 7; min-height: 150px; margin-bottom: 8px; border-radius: 14px;
+  background: var(--sup-plate);
 }
 .hub-scene {
   position: absolute; left: 50%; bottom: -14px; width: 330px; height: 236px;
   transform: translateX(-50%); cursor: pointer;
 }
 
+/* Modest heading, as the system keeps them; Tawny's brush face carries it. */
 .sheet-card .tip-hub h2 {
   margin: 4px 0 0; font-family: var(--display); font-weight: 400;
-  font-size: 46px; line-height: 1; letter-spacing: -.01em; color: var(--fg);
+  font-size: 34px; line-height: 1.1; letter-spacing: 0; color: var(--fg);
 }
-.hub-intro { margin: 0 0 6px; font-size: 16px; line-height: 1.5; color: var(--fg); max-width: 36ch; text-wrap: pretty; }
+.hub-intro { margin: 0 0 8px; font-size: 16px; line-height: 1.5; color: var(--fg); text-wrap: pretty; }
 
-/* Two choices, two fields, each carrying its own drawing at full size. */
-.hub-rows { display: grid; gap: 10px; }
-.hub-row {
-  --fill: var(--kofi);
-  position: relative; overflow: hidden;
-  display: flex; align-items: center;
-  width: 100%; min-height: 92px; padding: 16px 124px 16px 20px;
-  text-align: left; text-decoration: none; font: inherit; color: var(--card-ink);
-  background: var(--fill); border: 0; border-radius: 22px;
+/* Two cards, 2-up: plate, then title and one line. No border; the plate is the card. */
+.hub-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; }
+.hub-card {
+  display: flex; flex-direction: column; align-items: stretch; gap: 2px;
+  padding: 0; text-align: left; text-decoration: none; font: inherit; color: var(--fg);
+  background: none; border: 0; border-radius: 14px;
   -webkit-tap-highlight-color: transparent;
-  transition: transform .18s cubic-bezier(.2, .8, .3, 1);
 }
-.hub-bolt { --fill: var(--bolt); }
-.hub-row:hover { transform: translateY(-2px); }
-.hub-row:active { transform: scale(.98); }
-.hub-row:focus-visible { outline: 3px solid var(--fill); outline-offset: 3px; }
-.hub-tt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.hub-tt b { font-size: 19px; font-weight: 600; line-height: 1.2; }
-.hub-tt small { font-size: 13.5px; line-height: 1.35; }
-.hub-art {
-  position: absolute; right: -6px; bottom: -26px; width: 128px; height: 128px;
-  transition: transform .22s cubic-bezier(.2, .8, .3, 1);
+.hub-card:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+.hub-plate {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  aspect-ratio: 4 / 3; margin-bottom: 8px; border-radius: 14px;
+  background: var(--sup-plate);
+  transition: box-shadow .2s ease, transform .2s cubic-bezier(.2, .8, .3, 1);
 }
-.hub-row:hover .hub-art { transform: rotate(-6deg) translateY(-3px); }
-.hub-kofi .mug, .hub-kofi .mug-handle { fill: var(--card-ink); }
-.hub-kofi .mug-heart { fill: var(--fill); transform-origin: 40px 48px; animation: heart-idle 5s 2s ease-in-out infinite; }
+.hub-card:hover .hub-plate { box-shadow: var(--sup-lift); transform: translateY(-2px); }
+.hub-card:active .hub-plate { transform: scale(.97); }
+.hub-card b { font-size: 16px; font-weight: 600; line-height: 1.25; }
+.hub-card small { font-size: 14px; line-height: 1.43; color: var(--dim); }
+
+.hub-art { width: 62%; height: auto; }
+.hub-kofi .mug { fill: var(--fg); }
+.hub-kofi .mug-heart { fill: var(--berry); transform-origin: 40px 48px; animation: heart-idle 5s 2s ease-in-out infinite; }
 .hub-kofi .steam {
-  fill: none; stroke: var(--card-ink); stroke-width: 3.2; stroke-linecap: round;
+  fill: none; stroke: var(--dim); stroke-width: 3.2; stroke-linecap: round;
   opacity: 0; animation: steam 2.6s ease-out infinite;
 }
 .hub-kofi .s2 { animation-delay: .85s; }
@@ -490,36 +479,47 @@ button { font: inherit; color: inherit; cursor: pointer; }
   35%  { opacity: .8; }
   100% { opacity: 0; transform: translateY(-8px); }
 }
-.hub-bolt .bolt { fill: var(--card-ink); transform-origin: 40px 40px; animation: bolt-idle 4.6s 1.2s ease-in-out infinite; }
+.hub-kofi:active .mug-heart { animation: tip-beat .52s linear; }
+
+/* The accent's one round moment on the hub: the bolt in an orb. */
+.hub-orb {
+  display: grid; place-items: center; width: 44%; aspect-ratio: 1;
+  border-radius: 9999px; background: var(--berry);
+}
+.hub-orb svg { width: 56%; height: 56%; }
+.hub-orb .bolt { fill: var(--on-accent); transform-origin: 40px 40px; animation: bolt-idle 4.6s 1.2s ease-in-out infinite; }
 @keyframes bolt-idle {
   0%, 84%, 100% { transform: none; }
   87% { transform: translateX(3px) scale(1.06); } 90% { transform: translateX(-3px); } 93% { transform: translateX(1.5px); }
 }
-.hub-kofi:active .mug-heart { animation: tip-beat .52s linear; }
 .hub-bolt:active .bolt { animation: tip-zap .38s linear; }
 
-.hub-foot { margin: 6px 0 0; font-size: 14px; color: var(--fg); }
+.hub-foot { margin: 8px 0 0; font-size: 14px; color: var(--dim); }
+/* "Not now": tertiary text, underlined on hover. */
+#tip .tip-close { color: var(--fg); font-weight: 500; }
+#tip .tip-close:hover { text-decoration: underline; color: var(--fg); }
 
-/* Each page comes up in a short stagger: the stage, the heading, the words, the choices. */
-.tip-hub.enter > *, #tip-pick.enter > *, .tip-thanks.enter > * { animation: page-in .44s cubic-bezier(.2, .8, .3, 1) both; }
-.tip-hub.enter > :nth-child(2), #tip-pick.enter > :nth-child(2) { animation-delay: .07s; }
-.tip-hub.enter > :nth-child(3), #tip-pick.enter > :nth-child(3) { animation-delay: .14s; }
-.tip-hub.enter > :nth-child(4), #tip-pick.enter > :nth-child(4) { animation-delay: .21s; }
-.tip-hub.enter > :nth-child(n+5), #tip-pick.enter > :nth-child(n+5) { animation-delay: .28s; }
-.tip-hub.enter .hub-row:nth-child(2) { animation: page-in .44s .3s cubic-bezier(.2, .8, .3, 1) both; }
-@keyframes page-in { from { opacity: 0; transform: translateY(18px); } }
+/* Each page comes up in a short stagger. */
+.tip-hub.enter > *, #tip-pick.enter > *, .tip-thanks.enter > * { animation: page-in .4s cubic-bezier(.2, .8, .3, 1) both; }
+.tip-hub.enter > :nth-child(2), #tip-pick.enter > :nth-child(2) { animation-delay: .06s; }
+.tip-hub.enter > :nth-child(3), #tip-pick.enter > :nth-child(3) { animation-delay: .12s; }
+.tip-hub.enter > :nth-child(4), #tip-pick.enter > :nth-child(4) { animation-delay: .18s; }
+.tip-hub.enter > :nth-child(n+5), #tip-pick.enter > :nth-child(n+5) { animation-delay: .24s; }
+.tip-hub.enter .hub-card:nth-child(2) { animation: page-in .4s .28s cubic-bezier(.2, .8, .3, 1) both; }
+.tip-hub.enter .hub-card:nth-child(1) { animation: page-in .4s .2s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes page-in { from { opacity: 0; transform: translateY(14px); } }
 
-/* Back to the hub from the Lightning page. */
+/* Back: the system's round icon button on the strong surface. */
 .tip-back {
-  flex: none; width: 44px; height: 44px; margin: 0 -2px 0 -10px;
+  flex: none; width: 40px; height: 40px; margin: 0 4px 0 -4px;
   display: grid; place-items: center; padding: 0;
-  color: var(--fg); background: none; border: 0; border-radius: 50%;
+  color: var(--fg); background: var(--raise); border: 0; border-radius: 9999px;
   -webkit-tap-highlight-color: transparent;
 }
-.tip-back:hover { background: var(--raise); }
+.tip-back:hover { background: color-mix(in srgb, var(--fg) 10%, var(--raise)); }
 .tip-back svg {
-  width: 22px; height: 22px;
-  fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
 }
 
 /* Press characters, from the native IconView. */
@@ -2673,24 +2673,22 @@ body:has(#live:not([hidden])) #theme-toggle {
 }
 .tip-head-mark svg { width: 22px; height: 22px; fill: currentColor; }
 
-.tip-amounts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-top: 12px; }
+.tip-amounts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+/* Amount pills; the picked one fills with ink, as a picked date does. */
 .tip-amt {
-  display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 56px; padding: 8px 2px;
-  color: var(--fg); background: var(--raise); border: 0; border-radius: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  min-height: 56px; padding: 6px 2px;
+  color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 9999px;
   cursor: pointer; -webkit-tap-highlight-color: transparent;
-  transition: background .14s ease, transform .13s cubic-bezier(.2, .8, .3, 1);
+  transition: border-color .14s ease, background .14s ease, color .14s ease, transform .13s cubic-bezier(.2, .8, .3, 1);
 }
-.tip-amt:hover { background: color-mix(in srgb, var(--bolt) 14%, var(--raise)); }
-.tip-amt:active { transform: scale(.97); }
-.tip-amt[aria-checked="true"] {
-  color: var(--card-ink); background: var(--bolt);
-  animation: amt-pop .32s cubic-bezier(.3, 1.6, .5, 1);
-}
-.tip-amt[aria-checked="true"] small { color: inherit; }
-@keyframes amt-pop { 0% { transform: scale(.94); } 60% { transform: scale(1.05); } 100% { transform: scale(1); } }
-.tip-amt b { font-size: 15px; font-weight: 600; }
-.tip-amt small { font-size: 10.5px; color: var(--dim); white-space: nowrap; }
-.tip-amt:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+.tip-amt:hover { border-color: var(--fg); }
+.tip-amt:active { transform: scale(.96); }
+.tip-amt[aria-checked="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); }
+.tip-amt b { font-size: 16px; font-weight: 600; line-height: 1.25; }
+.tip-amt small { font-size: 11px; color: var(--dim); white-space: nowrap; }
+.tip-amt[aria-checked="true"] small { color: inherit; opacity: .8; }
+.tip-amt:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 
 .tip-other { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; }
 .tip-other > span { color: var(--dim); font-weight: 600; }
@@ -2701,57 +2699,55 @@ body:has(#live:not([hidden])) #theme-toggle {
 .tip-other input:focus { border-color: var(--sky); }
 .sheet .tip-other .wide { flex: none; width: auto; min-height: 46px; padding: 11px 16px; }
 
-/* The code, like a snapshot the Monitor just took: cream paper in a thick
-   flat berry frame, the owlet perched on top. Paper and ink stay light-on-dark
-   in both themes: a QR has to stay a QR. */
+/* The code on a white plate, rounded and clipped like a listing photo, with
+   one hairline and the accent orb in the middle. Paper and ink stay
+   light-on-dark in both themes: a QR has to stay a QR. Tawny perches on top. */
 .tip-qr {
-  --qr-ink: #33241a;
-  --qr-paper: #fffaf2;
+  --qr-ink: #2b2420;
+  --qr-paper: #ffffff;
   position: relative;
-  width: min(252px, 72vw); aspect-ratio: 1;
-  margin: 50px auto 0; padding: 10px;
+  width: min(248px, 72vw); aspect-ratio: 1;
+  margin: 50px auto 0; padding: 12px;
   background: var(--qr-paper);
-  border: 7px solid var(--kofi);
-  border-radius: 26px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
 }
 .tip-qr-img { position: relative; width: 100%; height: 100%; }
 .tip-qr-img svg { display: block; width: 100%; height: 100%; }
 .tip-qr-img .qr-paper { fill: var(--qr-paper); }
 .tip-qr-img .qr-dots { fill: var(--qr-ink); }
-.tip-qr-img .eye-a { color: #9c3550; }   /* deep berry / deep sky / ink:  */
-.tip-qr-img .eye-b { color: #33506a; }   /* all dark enough on cream for  */
-.tip-qr-img .eye-c { color: #4a3424; }   /* any phone camera              */
+.tip-qr-img .qr-eye { color: var(--qr-ink); }   /* ink, like everything that isn't the accent */
 .tip-qr-img .qr-eye rect { stroke: currentColor; }
 .tip-qr-img .qr-eye rect + rect { fill: currentColor; stroke: none; }
 .tip-qr:not([data-state="qr"]) .tip-qr-img { visibility: hidden; }
 
-/* The print comes up: the paper rises into place, then the three eyes pop. */
-.tip-qr[data-state="qr"] .tip-qr-img { animation: qr-print .5s cubic-bezier(.2, .8, .3, 1) both; }
-.tip-qr[data-state="qr"] .qr-eye { animation: qr-pop .42s cubic-bezier(.3, 1.6, .5, 1) both; }
-.tip-qr[data-state="qr"] .eye-b { animation-delay: .25s; }
-.tip-qr[data-state="qr"] .eye-c { animation-delay: .35s; }
-.tip-qr[data-state="qr"] .eye-a { animation-delay: .45s; }
-@keyframes qr-print { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+.tip-qr[data-state="qr"] .tip-qr-img { animation: qr-print .45s cubic-bezier(.2, .8, .3, 1) both; }
+.tip-qr[data-state="qr"] .qr-eye { animation: qr-pop .4s cubic-bezier(.3, 1.5, .5, 1) both; }
+.tip-qr[data-state="qr"] .eye-b { animation-delay: .2s; }
+.tip-qr[data-state="qr"] .eye-c { animation-delay: .28s; }
+.tip-qr[data-state="qr"] .eye-a { animation-delay: .36s; }
+@keyframes qr-print { from { opacity: 0; transform: translateY(12px) scale(.97); } }
 @keyframes qr-pop { from { opacity: 0; transform: scale(.9); } }
 
-/* The bolt in the clear patch at the centre. */
+/* The orb: the accent's one moment on this page. */
 .tip-qr-badge {
   position: absolute; left: 50%; top: 50%;
-  width: 14%; aspect-ratio: 1; transform: translate(-50%, -50%);
-  display: grid; place-items: center; border-radius: 30%;
-  background: #33506a;
+  width: 15%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  display: grid; place-items: center; border-radius: 9999px;
+  background: #d24b6d;
+  box-shadow: 0 0 0 4px var(--qr-paper);
 }
-.tip-qr-badge svg { width: 58%; height: 58%; fill: #fff; }
+.tip-qr-badge svg { width: 54%; height: 54%; fill: #fff; }
 .tip-qr:not([data-state="qr"]) .tip-qr-badge { display: none; }
-.tip-qr[data-state="qr"] .tip-qr-badge { animation: badge-in .45s .55s cubic-bezier(.3, 1.6, .5, 1) both; }
+.tip-qr[data-state="qr"] .tip-qr-badge { animation: badge-in .4s .45s cubic-bezier(.3, 1.5, .5, 1) both; }
 @keyframes badge-in { from { opacity: 0; transform: translate(-50%, -50%) scale(.9); } }
 .tip-qr.is-waiting .tip-qr-badge svg { animation: badge-zap 2.8s 1.6s ease-in-out infinite; }
 @keyframes badge-zap { 0%, 86%, 100% { transform: none; } 90% { transform: scale(1.22) rotate(-8deg); } 94% { transform: scale(.94) rotate(4deg); } }
 
-/* Tawny on the top edge of the frame: she hops while you scan, reacts to the
-   amount you pick, and flutters when tapped. */
+/* Tawny on the top edge: she hops while you scan, once per amount step when
+   you pick one, and flutters when tapped. */
 .tip-owl {
-  position: absolute; left: 50%; top: -52px; z-index: 2;
+  position: absolute; left: 50%; top: -53px; z-index: 2;
   width: 78px; height: 70px; transform: translateX(-50%);
   cursor: pointer;
 }
@@ -2822,26 +2818,39 @@ body:has(#live:not([hidden])) #theme-toggle {
 /* ------------------------------------------------- support: Lightning page */
 
 #tip-pick { display: flex; flex-direction: column; }
-#tip-pick .tip-head h2 { font-size: 22px; }
+#tip-pick .tip-head h2 { font-size: 20px; font-weight: 600; line-height: 1.2; }
+#tip-pick .tip-head .hint { font-size: 14px; }
+/* Buttons: the primary keeps the app's berry; the other is outlined in ink. */
+#tip .sheet-actions .wide { min-height: 48px; border-radius: 8px; }
+#tip .tip-actions a.wide:not(.primary) { background: var(--panel); border: 1px solid var(--fg); color: var(--fg); }
+.tip-other input {
+  height: 56px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel);
+}
+.tip-other input:focus { border: 2px solid var(--fg); }
+.sheet .tip-other .wide { min-height: 56px; border-radius: 8px; }
+.tip-codeline .linkbtn { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ------------------------------------------------- support: thank-you */
 
-.tip-party { position: relative; width: 250px; height: 160px; margin: -4px auto 4px; }
+.tip-party { position: relative; width: 250px; height: 160px; margin: -4px auto 0; }
 .tip-party canvas { width: 100%; height: 100%; }
 .tip-party .tip-check {
-  position: absolute; right: -8px; top: 0; width: 48px; height: 48px; margin: 0;
-  border-radius: 50%; background: var(--stage);
+  position: absolute; right: -8px; top: 0; width: 44px; height: 44px; margin: 0;
+  border-radius: 50%; background: var(--panel);
 }
-.tip-thanks h2 { font-family: var(--display); font-weight: 400; font-size: 48px; line-height: 1; letter-spacing: -.01em; }
-.tip-thanks .tip-got {
-  display: inline-block; padding: 6px 16px; border-radius: 999px;
-  color: var(--card-ink); background: var(--kofi);
-}
+.tip-thanks h2 { font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1.1; }
+/* The sheet's one loud number. */
+.tip-big { display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 6px 0 4px; }
+.tip-big b { font-size: 64px; font-weight: 700; line-height: 1.05; letter-spacing: -1px; color: var(--fg); font-variant-numeric: tabular-nums; }
+.tip-big span { font-size: 14px; color: var(--dim); }
+.tip-thanks.enter .tip-big b { animation: big-in .6s .35s cubic-bezier(.3, 1.4, .5, 1) both; }
+@keyframes big-in { from { opacity: 0; transform: translateY(10px) scale(.92); } }
+.tip-thanks .tip-got { font-size: 14px; font-weight: 400; color: var(--dim); }
 .tip-hearts span svg { display: block; width: calc(16px * var(--s, 1)); height: calc(16px * var(--s, 1)); fill: currentColor; }
 
 @media (prefers-reduced-motion: reduce) {
   .hub-kofi .steam { display: none; }
   .appbar-heart svg, .support-card-heart, .wn-support svg, .tip-qr-badge svg,
-  .hub-kofi .mug-heart, .hub-bolt .bolt { animation: none; }
+  .hub-kofi .mug-heart, .hub-orb .bolt { animation: none; }
 }
 [data-motion="off"] .hub-kofi .steam { display: none; }

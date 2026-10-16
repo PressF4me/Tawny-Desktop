@@ -599,23 +599,29 @@
       </div>
       <h2 id="hub-title" data-i18n="w_support_title">Support Tawny</h2>
       <p class="hub-intro" data-i18n="w_support_intro">Tawny is free, has no ads and doesn’t collect anything about you. If you enjoy it, you can help keep it that way.</p>
+      <!-- Two picture-first cards, side by side: a plate with the drawing,
+           then a title and one line beneath. -->
       <div class="hub-rows">
-        <a class="hub-row hub-kofi" href="https://ko-fi.com/tawnyone" target="_blank" rel="noopener noreferrer">
-          <span class="hub-tt"><b data-i18n="w_support_kofi">Buy a coffee</b><small><span data-i18n="w_support_kofi_sub">Card or PayPal on Ko-fi</span> ↗</small></span>
-          <svg class="hub-art" viewBox="0 0 80 80" aria-hidden="true">
-            <path class="steam s1" d="M30 22c-4-5 4-8 0-14"/>
-            <path class="steam s2" d="M40 22c-4-5 4-8 0-14"/>
-            <path class="steam s3" d="M50 22c-4-5 4-8 0-14"/>
-            <path class="mug" d="M16 28h48v22a18 18 0 0 1-18 18H34a18 18 0 0 1-18-18z"/>
-            <path class="mug-handle" d="M64 33h4a9 9 0 0 1 0 18h-4v-6h4a3 3 0 0 0 0-6h-4z"/>
-            <path class="mug-heart" d="M40 55c-6-4-9-7-9-10.5 0-2.6 2-4.5 4.4-4.5 1.9 0 3.4 1 4.6 2.6 1.2-1.6 2.7-2.6 4.6-2.6 2.4 0 4.4 1.9 4.4 4.5 0 3.5-3 6.5-9 10.5z"/>
-          </svg>
+        <a class="hub-card hub-kofi" href="https://ko-fi.com/tawnyone" target="_blank" rel="noopener noreferrer">
+          <span class="hub-plate" aria-hidden="true">
+            <svg class="hub-art" viewBox="0 0 80 80">
+              <path class="steam s1" d="M30 22c-4-5 4-8 0-14"/>
+              <path class="steam s2" d="M40 22c-4-5 4-8 0-14"/>
+              <path class="steam s3" d="M50 22c-4-5 4-8 0-14"/>
+              <path class="mug" d="M16 28h48v22a18 18 0 0 1-18 18H34a18 18 0 0 1-18-18z"/>
+              <path class="mug" d="M64 33h4a9 9 0 0 1 0 18h-4v-6h4a3 3 0 0 0 0-6h-4z"/>
+              <path class="mug-heart" d="M40 55c-6-4-9-7-9-10.5 0-2.6 2-4.5 4.4-4.5 1.9 0 3.4 1 4.6 2.6 1.2-1.6 2.7-2.6 4.6-2.6 2.4 0 4.4 1.9 4.4 4.5 0 3.5-3 6.5-9 10.5z"/>
+            </svg>
+          </span>
+          <b data-i18n="w_support_kofi">Buy a coffee</b>
+          <small><span data-i18n="w_support_kofi_sub">Card or PayPal on Ko-fi</span> ↗</small>
         </a>
-        <button id="hub-lightning" class="hub-row hub-bolt" type="button">
-          <span class="hub-tt"><b data-i18n="w_tip_title">Tip in Bitcoin</b><small data-i18n="w_support_ln_sub">Over Lightning with any wallet, or on strike.me</small></span>
-          <svg class="hub-art" viewBox="0 0 80 80" aria-hidden="true">
-            <path class="bolt" d="M48 4 18 44h18l-6 32 32-42H44z"/>
-          </svg>
+        <button id="hub-lightning" class="hub-card hub-bolt" type="button">
+          <span class="hub-plate" aria-hidden="true">
+            <span class="hub-orb"><svg viewBox="0 0 80 80"><path class="bolt" d="M48 4 18 44h18l-6 32 32-42H44z"/></svg></span>
+          </span>
+          <b data-i18n="w_tip_title">Tip in Bitcoin</b>
+          <small data-i18n="w_support_ln_sub">Over Lightning with any wallet, or on strike.me</small>
         </button>
       </div>
       <p class="hub-foot" data-i18n="w_support_thanks_line">Thank you for being here.</p>
@@ -668,7 +674,8 @@
         <svg class="tip-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27 l7 7 l15 -16"/></svg>
       </div>
       <h2 data-i18n="w_tip_thanks">Thank you!</h2>
-      <p id="tip-got" class="tip-got"></p>
+      <p class="tip-big" aria-hidden="true"><b id="tip-big-amt"></b><span id="tip-big-sats"></span></p>
+      <p id="tip-got" class="tip-got sr-only"></p>
       <p class="hint" data-i18n="w_tip_thanks_body">You’re making Tawny better for everyone.</p>
       <div class="sheet-actions"><button id="tip-done" class="wide primary" type="button" data-i18n="w_tip_done">Done</button></div>
     </div>

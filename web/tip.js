@@ -275,6 +275,9 @@ async function choose(i) {
 function landed(amount) {
   S.listener = null;
   $('#tip-got').textContent = amount.usd != null ? t('w_tip_got', fmtUsd(amount.usd), fmtSats(amount.sats)) : t('w_tip_got_sats', fmtSats(amount.sats));
+  // The sheet's one loud number: what you gave.
+  $('#tip-big-amt').textContent = amount.usd != null ? fmtUsd(amount.usd) : fmtSats(amount.sats);
+  $('#tip-big-sats').textContent = amount.usd != null ? fmtSats(amount.sats) : '';
   view('thanks');
   // The cat, the owlet and the dog all go off at once.
   requestAnimationFrame(() => requestAnimationFrame(() => window.tawnyScene?.celebrate($('#tip-party-scene'))));
