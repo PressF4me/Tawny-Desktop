@@ -75,13 +75,13 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.tauri-cli
-          key: tauri-cli-3.0.0-alpha.1-${{ runner.os }}
+          key: tauri-cli-3.0.0-alpha.6-${{ runner.os }}
 
       - name: Tauri CLI
         if: steps.tauri-cli.outputs.cache-hit != 'true'
         # PowerShell, so these two steps read the same as the Windows job's.
         shell: pwsh
-        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
+        run: cargo install tauri-cli --version '=3.0.0-alpha.6' --locked --root "$HOME/.tauri-cli"
 
       - name: Tauri CLI on PATH
         shell: pwsh
@@ -168,14 +168,14 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.tauri-cli
-          key: tauri-cli-3.0.0-alpha.1-${{ runner.os }}
+          key: tauri-cli-3.0.0-alpha.6-${{ runner.os }}
 
       - name: Tauri CLI
         if: steps.tauri-cli.outputs.cache-hit != 'true'
         # PowerShell, not bash: on Windows, Git Bash puts its coreutils `link`
         # ahead of MSVC's link.exe and every Rust link fails.
         shell: pwsh
-        run: cargo install tauri-cli --version '=3.0.0-alpha.1' --locked --root "$HOME/.tauri-cli"
+        run: cargo install tauri-cli --version '=3.0.0-alpha.6' --locked --root "$HOME/.tauri-cli"
 
       - name: Tauri CLI on PATH
         shell: pwsh

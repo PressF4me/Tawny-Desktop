@@ -97,7 +97,7 @@ Requirements on Linux: Rust 1.95+, GTK 4.14+ dev headers, cmake, ninja,
 patchelf, and the Tauri CLI that matches the pinned crates:
 
 ```sh
-cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
+cargo install tauri-cli --version '=3.0.0-alpha.6' --locked
 ```
 
 | | |

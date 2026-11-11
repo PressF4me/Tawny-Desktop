@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the AppImage to dist/. Needs Rust and the Tauri CLI that matches the
 # pinned crates:
-#   cargo install tauri-cli --version '=3.0.0-alpha.1' --locked
+#   cargo install tauri-cli --version '=3.0.0-alpha.6' --locked
 
 set -euo pipefail
 
