@@ -1,9 +1,8 @@
 {
-  "version": "0.1.11",
+  "version": "0.1.12",
   "notes": [
-    "Support Tawny: one sheet with the cat, the owlet and the dog. Buy a coffee on Ko-fi, or tip in Bitcoin with a new, friendlier QR code",
-    "Tawny now speaks Spanish when your computer is set to Spanish, from the first screen to the call",
-    "Works better with screen readers and keyboards: changes are read out, and sheets keep focus while they are open"
+    "Security update: Tawny is built with patched components after a full security review, including the code it uses to download its browser engine",
+    "The release builds are now pinned to exact, reviewed versions of every tool they use, so a tampered tool cannot slip into a download"
   ],
   "changelog": "https://github.com/PressF4me/Tawny-APK/blob/master/docs/changelog/desktop.md"
 }

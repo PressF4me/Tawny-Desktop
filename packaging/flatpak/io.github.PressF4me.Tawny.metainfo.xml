@@ -60,6 +60,11 @@
   </supports>
 
   <releases>
+    <release version="0.1.12" date="2026-11-12">
+      <description>
+        <p>Security update: Tawny is built with patched components after a full security review, and its release builds are pinned to exact, reviewed versions of every tool they use.</p>
+      </description>
+    </release>
     <release version="0.1.11" date="2026-10-16">
       <description>
         <p>Support Tawny: one sheet with the cat, the owlet and the dog, to buy a coffee on Ko-fi or tip in Bitcoin with a new QR code. Tawny speaks Spanish when the computer is set to Spanish, and works better with screen readers and keyboards.</p>
