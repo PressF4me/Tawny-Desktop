@@ -22,6 +22,7 @@ use tokio::sync::mpsc;
 // ---------------------------------------------------- rendezvous/protocol.js
 
 /// Every relayed type is addressed; peer ids come from the relay.
+#[rustfmt::skip]
 const RELAY: &[&str] = &[
   "offer", "answer", "ice", "bye", "chime", "chime-ack", "talking",
   "cameras", "meta", "camera-control", "torch", "battery",
@@ -135,8 +136,15 @@ fn new_id() -> String {
 }
 
 impl Relay {
+  /// The relay's state. A panic while it was held leaves it poisoned; the maps
+  /// inside are still consistent at every await-free step, so carry on with
+  /// them rather than take every later connection down with it.
+  fn lock(&self) -> std::sync::MutexGuard<'_, Inner> {
+    self.0.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
+  }
+
   pub fn full(&self) -> bool {
-    self.0.lock().unwrap().clients >= MAX_TOTAL
+    self.lock().clients >= MAX_TOTAL
   }
 
   /// Roll tickets forward under a connected Monitor and drop dead ones, as
@@ -146,12 +154,10 @@ impl Relay {
     loop {
       tick.tick().await;
       let now = Instant::now();
-      let mut g = self.0.lock().unwrap();
+      let mut g = self.lock();
       let Inner { rooms, tickets, .. } = &mut *g;
       tickets.retain(|room, rec| {
-        let station_here = rooms
-          .get(room)
-          .is_some_and(|peers| peers.values().any(|p| p.role == Role::Station));
+        let station_here = rooms.get(room).is_some_and(|peers| peers.values().any(|p| p.role == Role::Station));
         if station_here && !rec.beyond_lifetime(now) {
           rec.exp = now + TICKET_TTL;
           true
@@ -167,7 +173,7 @@ impl Relay {
     let (mut sink, mut stream) = socket.split();
     let (tx, mut rx) = mpsc::unbounded_channel::<Out>();
 
-    self.0.lock().unwrap().clients += 1;
+    self.lock().clients += 1;
 
     // Writer: everything addressed to this socket, from any task.
     let writer = tokio::spawn(async move {
@@ -176,9 +182,7 @@ impl Relay {
           Out::Text(s) => Message::Text(s.into()),
           Out::Ping => Message::Ping(Default::default()),
           Out::Close((code, reason)) => {
-            let _ = sink
-              .send(Message::Close(Some(CloseFrame { code, reason: Utf8Bytes::from_static(reason) })))
-              .await;
+            let _ = sink.send(Message::Close(Some(CloseFrame { code, reason: Utf8Bytes::from_static(reason) }))).await;
             break;
           }
         };
@@ -242,7 +246,7 @@ impl Relay {
           let Some(to) = obj.get("to").and_then(Value::as_str).map(String::from) else { continue };
           if to == id { continue }
           obj.insert("from".into(), Value::String(id.to_string()));
-          let g = self.0.lock().unwrap();
+          let g = self.lock();
           if let Some(target) = g.rooms.get(room).and_then(|peers| peers.get(&to)) {
             target.send(&msg);
           }
@@ -259,7 +263,7 @@ impl Relay {
   /// stored state, and the room entry is created only on success.
   fn admit(&self, room: &str, id: &str, role: Role, msg: &Value, tx: &mpsc::UnboundedSender<Out>) -> bool {
     let now = Instant::now();
-    let mut g = self.0.lock().unwrap();
+    let mut g = self.lock();
     let refuse = |c: Close| {
       let _ = tx.send(Out::Close(c));
       false
@@ -342,10 +346,7 @@ impl Relay {
         peer.send(&json!({ "type": "peer-left", "id": old }));
       }
     }
-    let others: Vec<Value> = peers
-      .iter()
-      .map(|(pid, p)| json!({ "id": pid, "role": p.role.as_str() }))
-      .collect();
+    let others: Vec<Value> = peers.iter().map(|(pid, p)| json!({ "id": pid, "role": p.role.as_str() })).collect();
     for peer in peers.values() {
       peer.send(&json!({ "type": "peer-joined", "id": id, "role": role.as_str() }));
     }
@@ -356,7 +357,7 @@ impl Relay {
   }
 
   fn leave(&self, room: &str, id: &str) {
-    let mut g = self.0.lock().unwrap();
+    let mut g = self.lock();
     g.clients -= 1;
     let Some(peers) = g.rooms.get_mut(room) else { return };
     if peers.remove(id).is_some() {

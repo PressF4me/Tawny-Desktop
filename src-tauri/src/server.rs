@@ -84,7 +84,7 @@ fn bind() -> std::io::Result<TcpListener> {
       Err(e) => last = Some(e),
     }
   }
-  Err(last.unwrap())
+  Err(last.unwrap_or_else(|| std::io::Error::other("no port to try")))
 }
 
 /// Only this app's own page may use this server. The Host check keeps a DNS
@@ -171,8 +171,7 @@ async fn ws<R: Runtime>(
   }
   let role = Role::parse(q.role.as_deref().unwrap_or(""));
   let relay = ctx.relay.clone();
-  up.max_message_size(relay::MAX_MSG)
-    .on_upgrade(move |socket| relay.serve(socket, room, role))
+  up.max_message_size(relay::MAX_MSG).on_upgrade(move |socket| relay.serve(socket, room, role))
 }
 
 /// server.js's MIME table. Tauri's guess has no charset and calls a

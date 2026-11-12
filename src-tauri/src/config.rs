@@ -17,6 +17,7 @@ const DEFAULT_RENDEZVOUS: &str = "wss://tawny-rendezvous.tawny1.workers.dev";
 const DEFAULT_STUN: &str = "stun:stun.cloudflare.com:3478,stun:stun.l.google.com:19302";
 /// Hosts "Tip in Bitcoin" talks to: the Lightning Address's LNURL service, the
 /// BTC price for showing dollar amounts, and the relays the zap receipt goes to.
+#[rustfmt::skip]
 const TIP_CONNECT_SRC: [&str; 6] = [
   "https://strike.me", "https://api.coinbase.com",
   "wss://relay.damus.io", "wss://nos.lol", "wss://relay.primal.net", "wss://relay.snort.social",
@@ -43,10 +44,7 @@ pub struct Config {
 
 impl Config {
   pub fn from_build() -> Self {
-    let rendezvous = option_env!("TAWNY_RENDEZVOUS_URL")
-      .unwrap_or(DEFAULT_RENDEZVOUS)
-      .trim()
-      .to_string();
+    let rendezvous = option_env!("TAWNY_RENDEZVOUS_URL").unwrap_or(DEFAULT_RENDEZVOUS).trim().to_string();
     let stun = match option_env!("TAWNY_STUN_URLS").unwrap_or(DEFAULT_STUN).trim() {
       "off" => Vec::new(),
       s => list(s),
@@ -198,7 +196,10 @@ mod tests {
   #[test]
   fn connect_src_plain_ws_rendezvous() {
     let c = Config { rendezvous: "ws://192.168.1.5:8080".into(), stun: vec![], turn_mode: "auto".into() };
-    assert_eq!(c.connect_src(), format!("'self' ws://192.168.1.5:8080 http://192.168.1.5:8080 {}", TIP_CONNECT_SRC.join(" ")));
+    assert_eq!(
+      c.connect_src(),
+      format!("'self' ws://192.168.1.5:8080 http://192.168.1.5:8080 {}", TIP_CONNECT_SRC.join(" "))
+    );
   }
 
   #[test]
